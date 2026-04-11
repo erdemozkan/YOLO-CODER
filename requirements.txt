@@ -1,0 +1,5 @@
+# YOLO-CODER Core Dependencies
+openai>=1.0.0
+python-dotenv>=1.0.0
+rich>=13.0.0
+colorama>=0.4.6
