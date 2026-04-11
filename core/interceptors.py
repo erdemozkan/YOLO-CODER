@@ -222,8 +222,9 @@ def run_auto_intercept(
             try:
                 file_stat = os.stat(filepath)
                 is_executable = bool(file_stat.st_mode & stat.S_IXUSR)
-                # If the file is a script that needs execute rights, handle in interceptor 8
-                if not is_executable and os.path.isfile(filepath):
+                # Scripts needing execute rights are handled by interceptor 8
+                is_script = filepath.endswith(".sh") or filepath.startswith("./")
+                if not is_executable and os.path.isfile(filepath) and not is_script:
                     return FixResult(
                         command=f"chmod 644 {filepath}",
                         summary=f"Read-only file blocking write: {filepath}",

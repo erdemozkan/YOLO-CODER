@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 from openai import OpenAI
 from core.config import ModelConfig
 from core.project import ProjectContext, flat_file_list
@@ -80,8 +81,15 @@ def _build_system_prompt(ctx: ProjectContext) -> str:
 
     return (
         "You are a CLI repair tool. "
-        "Output ONLY the bare bash command to fix the error. "
-        "No explanation. No markdown. No backticks.\n"
+        "Output ONLY a single bare bash command to fix the error. "
+        "No explanation. No markdown. No backticks. No multi-line output.\n\n"
+        "To fix a Python source file, use the yolo_replace tool:\n"
+        "  python3 yolo_replace.py <filepath> <line_number> <new_line_content>\n"
+        "Example: python3 yolo_replace.py src/app.py 7 '    return a / b if b != 0 else 0'\n"
+        "The line number comes from the traceback. The new content replaces that exact line.\n\n"
+        "For missing packages:  pip install <package>\n"
+        "For missing dirs:      mkdir -p <path>\n"
+        "For permissions:       chmod +x <file>\n\n"
         f"Environment: {env_block}\n"
         f"Project: {project_block}{deps_block}\n"
         f"Repo files: [{repo_json}]"
@@ -123,10 +131,23 @@ class YoloAgent:
                 lines.append(f"       Still failing: {err_headline}")
             prior_block = "\n".join(lines)
 
+        # Inject the failing file's content so the model can generate a precise fix.
+        file_block = ""
+        file_match = re.search(r'File "(.+?\.py)"', error_msg)
+        if file_match:
+            fpath = Path(file_match.group(1))
+            try:
+                lines = fpath.read_text().splitlines()
+                numbered = "\n".join(f"{i+1}: {ln}" for i, ln in enumerate(lines))
+                file_block = f"\nFile content ({fpath.name}):\n{numbered}\n"
+            except OSError:
+                pass
+
         user_prompt = (
             f"Command: {user_cmd}\n"
             f"Exit Code: {exit_code}\n"
             f"Error: {error_msg}"
+            f"{file_block}"
             f"{prior_block}\n"
             f"FIX:"
         )

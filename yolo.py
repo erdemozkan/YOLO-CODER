@@ -208,6 +208,10 @@ def main():
                 m = re.search(r"python3 yolo_replace.py\s+(\S+)\s+(\d+)\s+(.*)", result.command)
                 if m:
                     filepath, line_num, new_text = m.groups()
+                    # Strip surrounding shell quotes the model may have added
+                    if (new_text.startswith("'") and new_text.endswith("'")) or \
+                       (new_text.startswith('"') and new_text.endswith('"')):
+                        new_text = new_text[1:-1]
                     replacer = SKILL_REGISTRY["line_replacer"]
                     replace_result = replacer(filepath, line_num, new_text)
                     print(replace_result)

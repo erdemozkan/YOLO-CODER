@@ -22,7 +22,7 @@ PROVIDER_DEFAULTS = {
     "ollama": {
         "host": "localhost",
         "port": 11434,
-        "model": "yolo-coder",
+        "model": "qwen2.5-coder:7b",
         "api_key": "ollama",
         # Ollama exposes /api/tags for listing models (not OpenAI-compat)
         "health_path": "/api/tags",
