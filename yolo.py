@@ -159,11 +159,23 @@ def main():
     print_banner()
     if len(sys.argv) < 2:
         print(f"{Fore.YELLOW}Usage: yolo <command>")
-        print(f"{Fore.YELLOW}       yolo --rollback    Undo changes from the last run")
+        print(f"{Fore.YELLOW}       yolo --watch <command>   Auto-fix on every file change")
+        print(f"{Fore.YELLOW}       yolo --rollback          Undo changes from the last run")
         sys.exit(0)
 
-    # ---- PARSE YOLO FLAGS (strip before passing command downstream) ----
+    # ---- WATCH MODE: hand off to sub-agent immediately ----
     raw_args = sys.argv[1:]
+    if "--watch" in raw_args:
+        raw_args.remove("--watch")
+        import subprocess as _sp
+        try:
+            _sp.run([sys.executable, "-m", "core.watcher"] + raw_args)
+        except KeyboardInterrupt:
+            pass
+        sys.exit(0)
+    # -------------------------------------------------------------------
+
+    # ---- PARSE YOLO FLAGS (strip before passing command downstream) ----
     dry_run  = "--dry-run" in raw_args
 
     def _pop_flag(flag: str) -> str | None:
