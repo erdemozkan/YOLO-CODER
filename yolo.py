@@ -13,6 +13,7 @@ from core.logger import RunLogger
 from core.preflight import run_preflight
 from core.project import detect_project
 from core.snapshot import rollback_all, rollback_from_disk, rollback_file, list_session_files, clear_snapshots, set_command, modified_files
+import core.history as _history
 from skills import SKILL_REGISTRY
 
 # --- INIT COLORAMA ---
@@ -164,10 +165,38 @@ def main():
         print(f"{Fore.YELLOW}       yolo --watch <command>   Auto-fix on every file change")
         print(f"{Fore.YELLOW}       yolo --scan              Scan project for secrets & credentials")
         print(f"{Fore.YELLOW}       yolo --rollback          Undo changes from the last run")
+        print(f"{Fore.YELLOW}       yolo --history           Browse past sessions")
         sys.exit(0)
 
-    # ---- SCAN MODE: standalone security audit ----
+    # ---- HISTORY MODE ----
     raw_args = sys.argv[1:]
+    if "--history" in raw_args:
+        raw_args = [a for a in raw_args if a != "--history"]
+        # --history --clear  →  wipe log
+        if "--clear" in raw_args:
+            _history.clear()
+            print(f"{Fore.YELLOW}  History cleared.")
+            sys.exit(0)
+        # --history N  →  show last N (default 10)
+        n = 10
+        if raw_args and raw_args[0].isdigit():
+            n = int(raw_args[0])
+        entries = _history.load(n)
+        print(_history.render_list(entries))
+        if not entries:
+            sys.exit(0)
+        print(f"\n  {Fore.CYAN}Enter a number{Fore.RESET} to see details, or {Fore.RED}q{Fore.RESET} to quit.\n")
+        try:
+            choice = input(f"{Fore.YELLOW}> {Fore.RESET}").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            sys.exit(0)
+        if choice.isdigit() and 1 <= int(choice) <= len(entries):
+            print(_history.render_detail(entries[int(choice) - 1]))
+        sys.exit(0)
+    # -----------------------------------------------
+
+    # ---- SCAN MODE: standalone security audit ----
     if "--scan" in raw_args:
         from core.scanner import run_scan
         sys.exit(run_scan("."))
@@ -399,6 +428,7 @@ def main():
             print(f"{Fore.YELLOW}  Plan    :  {Style.RESET_ALL}{result.plan}")
             print(f"\n{Fore.YELLOW}No changes made. Remove --dry-run to apply the fix.")
             logger.flush("dry_run")
+            _history.record(original_cmd, "dry_run", stderr, result.command, result.source, attempt, [])
             sys.exit(0)
 
         # 4b. Execute Fix (using the bypassed skill or native replacer)
@@ -450,8 +480,10 @@ def main():
             if explain:
                 from core.explain import render_explain
                 print(render_explain(result, original_stderr))
+            mods = modified_files()
             clear_snapshots()
-            logger.flush("success", modified_files())
+            logger.flush("success", mods)
+            _history.record(original_cmd, "fixed", original_stderr, result.command, result.source, attempt, mods)
             # Write to fix memory so next time we skip the LLM
             if result.source != "interceptor":
                 remember(original_stderr, result.command)
@@ -469,12 +501,14 @@ def main():
 
     print(f"{Fore.RED}💀 Failed after {max_attempts} attempts.")
 
+    mods = modified_files()
     restored = rollback_all()
     if restored:
         print(f"\n{Fore.YELLOW}↩ Rolling back changes:")
         for entry in restored:
             print(f"   {entry}")
-    logger.flush("rolled_back", modified_files(), rolled_back=True)
+    logger.flush("rolled_back", mods, rolled_back=True)
+    _history.record(original_cmd, "failed", original_stderr, "", "", max_attempts, mods)
 
 
 if __name__ == "__main__":
