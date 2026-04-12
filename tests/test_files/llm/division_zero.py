@@ -4,7 +4,7 @@
 # Expected fix: guard divisor against zero.
 
 def calculate(a, b):
-    return a / b if b != 0 else 0
+    return a / b
 
 result = calculate(100, 0)
 print("Result:", result)

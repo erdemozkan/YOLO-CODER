@@ -176,6 +176,37 @@
     "cleanup_files": ["config.json"]
   },
   {
+    "_comment": "=== MULTI-FILE LLM CONTEXT TESTS ===",
+    "id": "multifile_easy",
+    "description": "Multi-file easy — bug in helper (ZeroDivisionError), fix requires reading math_helper.py",
+    "type": "yolo_run",
+    "command": "python3 tests/test_files/multifile/easy/main.py",
+    "expect_outcome": "success",
+    "expect_attempts_max": 2,
+    "reset_after": true,
+    "cleanup_files": []
+  },
+  {
+    "id": "multifile_medium",
+    "description": "Multi-file medium — bug in models.py returns None, error surfaces in utils.py",
+    "type": "yolo_run",
+    "command": "python3 tests/test_files/multifile/medium/app.py",
+    "expect_outcome": "success",
+    "expect_attempts_max": 2,
+    "reset_after": true,
+    "cleanup_files": []
+  },
+  {
+    "id": "multifile_hard",
+    "description": "Multi-file hard — parser.py returns wrong type, breaks transformer.py, entry via pipeline.py",
+    "type": "yolo_run",
+    "command": "python3 tests/test_files/multifile/hard/pipeline.py",
+    "expect_outcome": "success",
+    "expect_attempts_max": 3,
+    "reset_after": true,
+    "cleanup_files": []
+  },
+  {
     "_comment": "=== SECURITY TESTS — schema validation, no YOLO subprocess ===",
     "id": "security_validate_commands",
     "description": "Unit — FixResult.is_valid() against dangerous command patterns",
