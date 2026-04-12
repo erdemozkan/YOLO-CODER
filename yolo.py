@@ -160,11 +160,18 @@ def main():
     if len(sys.argv) < 2:
         print(f"{Fore.YELLOW}Usage: yolo <command>")
         print(f"{Fore.YELLOW}       yolo --watch <command>   Auto-fix on every file change")
+        print(f"{Fore.YELLOW}       yolo --scan              Scan project for secrets & credentials")
         print(f"{Fore.YELLOW}       yolo --rollback          Undo changes from the last run")
         sys.exit(0)
 
-    # ---- WATCH MODE: hand off to sub-agent immediately ----
+    # ---- SCAN MODE: standalone security audit ----
     raw_args = sys.argv[1:]
+    if "--scan" in raw_args:
+        from core.scanner import run_scan
+        sys.exit(run_scan("."))
+    # -----------------------------------------------
+
+    # ---- WATCH MODE: hand off to sub-agent immediately ----
     if "--watch" in raw_args:
         raw_args.remove("--watch")
         import subprocess as _sp

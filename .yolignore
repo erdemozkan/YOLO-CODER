@@ -1,0 +1,12 @@
+# .yolignore — suppress known false positives in `yolo --scan`
+# Syntax:
+#   file:line     — ignore a specific line in a specific file
+#   file          — ignore all findings in a file
+#   # comment     — ignored
+
+# Test fixtures — intentional fake keys
+tests/test_files/fake_api.py
+tests/test_files_original/fake_api.py
+
+# Old backup — low risk placeholder keys only
+YOLO-MODEL-FILES/yolo.py.bak
