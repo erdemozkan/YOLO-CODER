@@ -1,5 +1,9 @@
+import itertools
 import platform
+import random
 import sys
+import threading
+import time
 from colorama import Fore, Style, init
 from core.agent import YoloAgent
 from core.config import load_config
@@ -15,6 +19,93 @@ init(autoreset=True)
 
 _IS_MACOS = platform.system() == "Darwin"
 
+_OR = "\033[38;5;208m"   # orange — matches banner brand colour
+_YL = "\033[93m"          # yellow — lightning bolt
+
+_QUIPS = [
+    "YOLOing..", "Fixing..", "Debugging..", "Joking..", "Crying..",
+    "Humming..", "Nagging..", "Thinking..", "Dreaming..", "Improving..",
+    "Developing..", "Shimmering..", "Boiling..", "Joining..", "Accepting..",
+    "Rejecting..", "Can't believing..", "Day dreaming..", "Hearing..",
+    "Wondering..", "Greeting..", "Morning!", "Verifying..", "Validating..",
+    "Forgetting..", "Talking..", "Sleeping..", "Cradling..", "Burping..",
+    "Celebrating..",
+]
+
+_COLORS = [
+    "\033[93m",         # yellow
+    "\033[38;5;214m",   # amber
+    "\033[97m",         # bright white
+    "\033[38;5;208m",   # orange
+    "\033[96m",         # cyan
+    "\033[90m",         # dim grey
+]
+_RST = "\033[0m"
+
+# Frames: bolt bounces left↔right across 5 positions, color cycles independently
+_POSITIONS = ["⚡    ", " ⚡   ", "  ⚡  ", "   ⚡ ", "    ⚡", "   ⚡ ", "  ⚡  ", " ⚡   "]
+
+
+def _quip():
+    """Animate ⚡ bouncing + color-cycling next to a quip for 0.5–1.5 s."""
+    quip = random.choice(_QUIPS)
+    duration = random.uniform(0.5, 1.5)
+    deadline = time.time() + duration
+
+    if sys.stdout.isatty():
+        # Direct terminal — overwrite same line with \r
+        print()
+        for i, pos in enumerate(itertools.cycle(_POSITIONS)):
+            if time.time() >= deadline:
+                break
+            color = _COLORS[i % len(_COLORS)]
+            print(f"\r  {color}{pos}{_RST}  {Style.DIM}{quip}{Style.RESET_ALL}", end="", flush=True)
+            time.sleep(0.10)
+        print()
+    else:
+        # Piped (test runner) — emit a marker so the runner can animate it in-place
+        print(f"\x00QUIP:{quip}:{duration:.2f}", flush=True)
+
+
+class YoloSpinner:
+    """Animates <⚡> with a bouncing bolt while a blocking operation runs."""
+
+    _FRAMES = [
+        f"<{_YL}⚡{_OR}   >",
+        f"< {_YL}⚡{_OR}  >",
+        f"<  {_YL}⚡{_OR} >",
+        f"<   {_YL}⚡{_OR}>",
+        f"<  {_YL}⚡{_OR} >",
+        f"< {_YL}⚡{_OR}  >",
+    ]
+    _RST = "\033[0m"
+
+    def __init__(self, label: str = ""):
+        self.label = label
+        self._stop = threading.Event()
+        self._thread: threading.Thread | None = None
+
+    def _spin(self):
+        if not sys.stdout.isatty():
+            return  # piped output (e.g. test runner) — skip animation
+        for frame in itertools.cycle(self._FRAMES):
+            if self._stop.is_set():
+                break
+            print(f"\r  {_OR}{frame}{self._RST}  {self.label}", end="", flush=True)
+            time.sleep(0.10)
+        # Erase the spinner line when done
+        print(f"\r{' ' * (len(self.label) + 14)}\r", end="", flush=True)
+
+    def __enter__(self):
+        self._thread = threading.Thread(target=self._spin, daemon=True)
+        self._thread.start()
+        return self
+
+    def __exit__(self, *_):
+        self._stop.set()
+        if self._thread:
+            self._thread.join()
+
 
 def _patch_cmd_for_os(cmd: str) -> str:
     """Fix commands that differ between Linux and macOS before executing them."""
@@ -27,23 +118,41 @@ def _patch_cmd_for_os(cmd: str) -> str:
 
 
 def print_banner():
-    S, D = "█", "░"
-    N = "\033[38;5;208m"
-    print(
-        f"{N}{S}{S}   {S}{S}{D}  {S}{S}{S}{S}{S}{S}{D}  {S}{S}{D}       {S}{S}{S}{S}{S}{S}{D}    {Fore.WHITE}v0.0.2-AGENTIC"
-    )
-    print(
-        f"{N} {S}{S} {S}{S}{D}  {S}{S}    {S}{S}{D} {S}{S}{D}      {S}{S}    {S}{S}{D}  "
-    )
-    print(
-        f"{N}  {S}{S}{S}{D}   {S}{S}    {S}{S}{D} {S}{S}{D}      {S}{S}    {S}{S}{D}  {Fore.BLUE}{Style.BRIGHT}https://github.com/erdemozkan/YOLO-APR{Style.RESET_ALL}{N}"
-    )
-    print(
-        f"{N}  {S}{S}{S}{D}   {S}{S}    {S}{S}{D} {S}{S}{D}      {S}{S}    {S}{S}{D}  "
-    )
-    print(
-        f"{N}  {S}{S}{S}{D}    {S}{S}{S}{S}{S}{S}{D}  {S}{S}{S}{S}{S}{S}{S}{D}  {S}{S}{S}{S}{S}{S}{D}   {Style.RESET_ALL}\n"
-    )
+    OR  = "\033[38;5;208m"   # orange — brand colour
+    RST = "\033[0m"
+
+    lines = [
+        "",
+        "                                    %%%",
+        "                                   %%%%",
+        "                                 %%%%",
+        "                               %%%%%%",
+        "               %%            %%%%%%%   %%             %%%%   %%% %%%%%%   %%%      %%%%%%",
+        "            %%%%%          %%%%%%%     %%%%            %%%  %%%%%%%%%%%%% %%%     %%%%%%%%%",
+        "          %%%%           %%%%%%%%%        %%%%         %%%%%%%% %%%  %%%% %%%     %%%   %%%",
+        "       %%%%            %%%%%%%%%%           %%%%        %%%%%%  %%%  %%%% %%%     %%%   %%%",
+        "     %%%%             %%%%%%%%%%%%%%%%         %%%%      %%%%   %%%  %%%% %%%     %%%   %%%",
+        "  %%%%              %%%%%%%%%%%%%%%%%%           %%%%    %%%%   %%%%%%%%% %%%%%%%%%%%%%%%%%",
+        "  %%%             %%%%%%%%%%%%%%%%%%%              %%%   %%%%    %%%%%%%  %%%%%%%%%%%%%%%%",
+        "   %%%%          %%%%%%%%%%%%%%%%%              %%%%",
+        "     %%%%%             %%%%%%%%%%             %%%%       %%%%%  %%%%%  %%%%%% %%%%%% %%%%%",
+        "        %%%%          %%%%%%%%%            %%%%         %%     %%   %% %%  %%%%%%%%  %% %%%",
+        "           %%%%      %%%%%%%%            %%%%           %%%  % %%   %% %%  %%%%%%    %%%%%",
+        "             %%%%    %%%%%%            %%%               %%%%%  %%%%%  %%%%%% %%%%%% %% %%%",
+        "                   %%%%%%",
+        "                  %%%%%",
+        "                  %%%",
+        "                 %%%",
+    ]
+
+    for i, line in enumerate(lines):
+        suffix = ""
+        if i == 5:
+            suffix = f"   {Fore.WHITE}v0.0.2-AGENTIC{Style.RESET_ALL}"
+        elif i == 7:
+            suffix = f"   {Fore.BLUE}{Style.BRIGHT}https://github.com/erdemozkan/YOLO-APR{Style.RESET_ALL}"
+        print(f"{OR}{line}{RST}{suffix}")
+    print()
 
 
 def main():
@@ -137,8 +246,10 @@ def main():
             sys.exit(1)
     # ==========================================
 
+    _quip()
     print(f"{Fore.CYAN}🚀 Executing: {Style.BRIGHT}{original_cmd}")
-    exit_code, stdout, stderr = run_cmd(original_cmd)
+    with YoloSpinner(original_cmd[:60]):
+        exit_code, stdout, stderr = run_cmd(original_cmd)
 
     if exit_code == 0:
         print(stdout)
@@ -149,6 +260,7 @@ def main():
     print(f"{Fore.RED}❌ Command failed (Exit {exit_code})")
     print(f"{Fore.RED}Error Log:\n{stderr.strip()}")
 
+    _quip()
     print(f"\n{Fore.YELLOW}🤖 YOLO Mode Activating...")
 
     ctx = detect_project()
@@ -163,14 +275,17 @@ def main():
         result = run_auto_intercept(stderr, ctx.declared_deps, dry_run=dry_run)
 
         if result is not None:
+            _quip()
             print(f"{Fore.MAGENTA}✨ AUTO-INTERCEPT TRIGGERED")
         else:
+            _quip()
             print(f"{Fore.YELLOW}🤖 Consulting the Brain...")
             # 2. Ask the LLM — pass full attempt history so it avoids repeating itself
-            result = agent.ask(
-                original_cmd, exit_code, stderr,
-                history=attempt_history if attempt_history else None,
-            )
+            with YoloSpinner("Thinking…"):
+                result = agent.ask(
+                    original_cmd, exit_code, stderr,
+                    history=attempt_history if attempt_history else None,
+                )
             safe, reason = result.is_valid()
             if not safe:
                 print(f"{Fore.RED}💀 Fix command blocked: {reason}")
@@ -220,11 +335,13 @@ def main():
                     else:
                         fix_code, fix_err = 1, replace_result
                 else:
-                    fix_code, _, fix_err = run_cmd(result.command)
+                    with YoloSpinner("Applying fix…"):
+                        fix_code, _, fix_err = run_cmd(result.command)
             except Exception as e:
                 fix_code, fix_err = 1, str(e)
         else:
-            fix_code, _, fix_err = run_cmd(result.command)
+            with YoloSpinner("Applying fix…"):
+                fix_code, _, fix_err = run_cmd(result.command)
 
         if fix_code != 0:
             print(f"{Fore.RED}⚠️ Fix failed: {fix_err.strip()}")
@@ -235,8 +352,10 @@ def main():
             continue
 
         # 5. Verify by re-running original command
+        _quip()
         print(f"{Fore.GREEN}✅ Fix applied. Retrying original command...")
-        exit_code, stdout, stderr = run_cmd(original_cmd)
+        with YoloSpinner(original_cmd[:60]):
+            exit_code, stdout, stderr = run_cmd(original_cmd)
 
         if exit_code == 0:
             print(stdout)

@@ -9,6 +9,7 @@ Usage:
   python3 tests/run_tests.py --quiet              # spinner only, no subprocess output
 """
 
+import itertools
 import json
 import shutil
 import subprocess
@@ -38,6 +39,10 @@ RESET   = "\033[0m"
 CLEAR   = "\033[2K\033[1G"
 
 def _c(color, text): return f"{color}{text}{RESET}"
+
+import re as _re
+def _vis(s): return len(_re.sub(r"\033\[[0-9;]*m", "", s))
+def _box_row(content, width): return f"  {DIM}║{RESET}{content}{' ' * (width - _vis(content))}{DIM}║{RESET}"
 
 
 # ── Fancy phase spinners ──────────────────────────────────────────────────────
@@ -181,6 +186,25 @@ def _do_cleanup(files: list):
             if path.exists(): path.unlink()
 
 
+_QUIP_COLORS = ["\033[93m", "\033[38;5;214m", "\033[97m", "\033[38;5;208m", "\033[96m", "\033[90m"]
+_QUIP_POSITIONS = ["⚡    ", " ⚡   ", "  ⚡  ", "   ⚡ ", "    ⚡", "   ⚡ ", "  ⚡  ", " ⚡   "]
+
+
+def _animate_quip(quip: str, duration: float):
+    """Run the bouncing ⚡ quip animation in-place on the real terminal."""
+    deadline = time.time() + duration
+    first = True
+    for i, pos in enumerate(itertools.cycle(_QUIP_POSITIONS)):
+        if time.time() >= deadline:
+            break
+        color = _QUIP_COLORS[i % len(_QUIP_COLORS)]
+        prefix = "\n  " if first else "\r  "
+        first = False
+        print(f"{prefix}{DIM}│{RESET}  {color}{pos}\033[0m  {DIM}{quip}{RESET}", end="", flush=True)
+        time.sleep(0.10)
+    print()  # newline after animation ends
+
+
 # ── Live-stream subprocess ────────────────────────────────────────────────────
 def _stream_proc(cmd, cwd, timeout=120):
     proc = subprocess.Popen(
@@ -190,7 +214,13 @@ def _stream_proc(cmd, cwd, timeout=120):
     )
     try:
         for line in proc.stdout:
-            print(f"  {DIM}│{RESET}  {line.rstrip()}")
+            raw = line.rstrip()
+            if raw.startswith("\x00QUIP:"):
+                # Format: \x00QUIP:<quip text>:<duration>
+                _, quip, dur = raw.split(":", 2)
+                _animate_quip(quip, float(dur))
+            else:
+                print(f"  {DIM}│{RESET}  {raw}")
         proc.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
         proc.kill(); proc.wait()
@@ -390,10 +420,11 @@ def main():
             time.sleep(0.5)
 
     # ── Summary ───────────────────────────────────────────────────────────────
-    W = 60
-    print(f"\n  {DIM}╔{'═'*(W-4)}╗{RESET}")
-    print(f"  {DIM}║{RESET}{BOLD}  Summary{'':<{W-12}}{RESET}{DIM}║{RESET}")
-    print(f"  {DIM}╠{'═'*(W-4)}╣{RESET}")
+    W  = 60
+    IW = W - 4   # inner content width = 56
+    print(f"\n  {DIM}╔{'═'*IW}╗{RESET}")
+    print(_box_row(f"{BOLD}  Summary", IW))
+    print(f"  {DIM}╠{'═'*IW}╣{RESET}")
 
     for tid, desc, status in results:
         icon  = _c(GREEN, "PASS") if status == "PASS" else \
@@ -401,18 +432,18 @@ def main():
                 _c(YELLOW, "SKIP")
         short = desc[:36] + "…" if len(desc) > 37 else desc
         row   = f"  {icon}  {DIM}{tid:<26}{RESET}  {short}"
-        print(f"  {DIM}║{RESET}{row}")
+        print(_box_row(row, IW))
         time.sleep(0.06)
 
-    print(f"  {DIM}╠{'═'*(W-4)}╣{RESET}")
+    print(f"  {DIM}╠{'═'*IW}╣{RESET}")
     total_line = (
         f"  {_c(GREEN, f'{passed} passed')}  "
         f"{_c(RED, f'{failed} failed')}  "
         f"{_c(YELLOW, f'{skipped} skipped')}  "
         f"{DIM}of {total}{RESET}"
     )
-    print(f"  {DIM}║{RESET}{total_line}")
-    print(f"  {DIM}╚{'═'*(W-4)}╝{RESET}\n")
+    print(_box_row(total_line, IW))
+    print(f"  {DIM}╚{'═'*IW}╝{RESET}\n")
 
     sys.exit(0 if failed == 0 else 1)
 

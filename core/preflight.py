@@ -40,7 +40,7 @@ def _print_online(cfg: ModelConfig, loaded_models: list[str]) -> None:
     active = cfg.model if cfg.model in loaded_models else (loaded_models[0] if loaded_models else "unknown")
 
     print(f"{M}┌{'─' * 52}┐")
-    print(f"{M}│{W}  🧠  YOLO BRAIN ONLINE{' ' * 31}{M}│")
+    print(f"{M}│{W}  🧠  YOLO BRAIN ONLINE{' ' * 29}{M}│")
     print(f"{M}├{'─' * 52}┤")
     print(f"{M}│{DIM}  Provider : {C}{cfg.provider:<39}{M}│{R}")
     print(f"{M}│{DIM}  Endpoint : {W}{cfg.base_url:<39}{M}│{R}")
