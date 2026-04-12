@@ -6,6 +6,7 @@ import threading
 import time
 from colorama import Fore, Style, init
 from core.agent import YoloAgent
+from core.schema import FixResult
 from core.config import load_config
 from core.interceptors import run_auto_intercept
 from core.logger import RunLogger
@@ -282,10 +283,12 @@ def main():
     _quip()
     print(f"\n{Fore.YELLOW}🤖 YOLO Mode Activating...")
 
+    from core.memory import recall, remember, forget
     ctx = detect_project()
     agent = YoloAgent(ctx, cfg)
     max_attempts = 3
     attempt_history: list[tuple[str, str]] = []  # (fix_cmd, new_stderr) per failed attempt
+    original_stderr = stderr  # keep the original error for memory lookups
 
     for attempt in range(1, max_attempts + 1):
         print(f"\n{Fore.MAGENTA}--- Attempt {attempt}/{max_attempts} ---")
@@ -297,14 +300,26 @@ def main():
             _quip()
             print(f"{Fore.MAGENTA}✨ AUTO-INTERCEPT TRIGGERED")
         else:
-            _quip()
-            print(f"{Fore.YELLOW}🤖 Consulting the Brain...")
-            # 2. Ask the LLM — pass full attempt history so it avoids repeating itself
-            with YoloSpinner("Thinking…"):
-                result = agent.ask(
-                    original_cmd, exit_code, stderr,
-                    history=attempt_history if attempt_history else None,
+            # 2. Check fix memory before calling the LLM
+            memory_hit = recall(original_stderr)
+            if memory_hit and attempt == 1:
+                _quip()
+                print(f"{Fore.CYAN}🧠 Fix Memory hit! (used {memory_hit['hits']}x before)")
+                result = FixResult(
+                    command=memory_hit["command"],
+                    summary="Recalled from fix memory",
+                    plan=f"Previously fixed this error {memory_hit['hits']} time(s) with this command.",
+                    source="memory",
                 )
+            else:
+                _quip()
+                print(f"{Fore.YELLOW}🤖 Consulting the Brain...")
+                # 3. Ask the LLM — pass full attempt history so it avoids repeating itself
+                with YoloSpinner("Thinking…"):
+                    result = agent.ask(
+                        original_cmd, exit_code, stderr,
+                        history=attempt_history if attempt_history else None,
+                    )
             safe, reason = result.is_valid()
             if not safe:
                 print(f"{Fore.RED}💀 Fix command blocked: {reason}")
@@ -385,12 +400,19 @@ def main():
             logger.record_attempt(result, fix_code, 0, "")
             clear_snapshots()
             logger.flush("success", modified_files())
+            # Write to fix memory so next time we skip the LLM
+            if result.source != "interceptor":
+                remember(original_stderr, result.command)
             print(f"{Fore.GREEN}✨ CODE WORKS")
             sys.exit(0)
         else:
             print(f"{Fore.RED}❌ Command failed again (Exit {exit_code})")
             print(f"{Fore.RED}New Error Log:\n{stderr.strip()}")
             logger.record_attempt(result, fix_code, exit_code, stderr)
+            # If the fix came from memory and it failed, evict it
+            if result.source == "memory":
+                forget(original_stderr)
+                print(f"{Fore.YELLOW}🧠 Memory fix failed — evicted from memory.")
             attempt_history.append((result.command, stderr))
 
     print(f"{Fore.RED}💀 Failed after {max_attempts} attempts.")
