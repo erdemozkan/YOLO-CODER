@@ -12,7 +12,7 @@ from core.interceptors import run_auto_intercept
 from core.logger import RunLogger
 from core.preflight import run_preflight
 from core.project import detect_project
-from core.snapshot import rollback_all, rollback_from_disk, clear_snapshots, set_command, modified_files
+from core.snapshot import rollback_all, rollback_from_disk, rollback_file, list_session_files, clear_snapshots, set_command, modified_files
 from skills import SKILL_REGISTRY
 
 # --- INIT COLORAMA ---
@@ -213,16 +213,62 @@ def main():
 
     # ---- ROLLBACK SUBCOMMAND ----
     if args[0] == "--rollback":
-        print(f"{Fore.YELLOW}↩  Rolling back last YOLO session...")
-        restored, command = rollback_from_disk()
-        if not restored:
+        # yolo --rollback <file>  →  direct selective restore (non-interactive)
+        if len(args) > 1:
+            target = args[1]
+            result, command = rollback_file(target)
+            if result == "no_session":
+                print(f"{Fore.YELLOW}   Nothing to roll back (no session file found).")
+            elif result == "not_found":
+                print(f"{Fore.YELLOW}   '{target}' not found in last session.")
+                files, _ = list_session_files()
+                if files:
+                    print(f"{Fore.YELLOW}   Files available for rollback:")
+                    for f in files:
+                        print(f"     {f}")
+            else:
+                if command:
+                    print(f"{Fore.YELLOW}   Session: {Style.BRIGHT}{command}")
+                print(f"   {result}")
+                print(f"{Fore.GREEN}✅ Rollback complete.")
+            sys.exit(0)
+
+        # yolo --rollback  →  interactive picker
+        files, command = list_session_files()
+        if not files:
             print(f"{Fore.YELLOW}   Nothing to roll back (no session file found).")
-        else:
-            if command:
-                print(f"{Fore.YELLOW}   Session: {Style.BRIGHT}{command}")
+            sys.exit(0)
+
+        shown = files[:10]  # cap at 10
+        print(f"\n{Fore.YELLOW}↩  Last session:{Style.RESET_ALL}  {Style.BRIGHT}{command or '(unknown)'}{Style.RESET_ALL}\n")
+        for i, f in enumerate(shown, 1):
+            print(f"  {Fore.CYAN}{i}{Style.RESET_ALL}  {f}")
+        if len(files) > 10:
+            print(f"  {Fore.WHITE}... ({len(files) - 10} more not shown){Style.RESET_ALL}")
+        print(f"\n  {Fore.CYAN}a{Style.RESET_ALL}  Restore ALL files")
+        print(f"  {Fore.RED}q{Style.RESET_ALL}  Quit\n")
+
+        try:
+            choice = input(f"{Fore.YELLOW}Pick a number (or a/q): {Style.RESET_ALL}").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            sys.exit(0)
+
+        if choice == "q" or choice == "":
+            sys.exit(0)
+        elif choice == "a":
+            print(f"{Fore.YELLOW}↩  Restoring all files...")
+            restored, _ = rollback_from_disk()
             for entry in restored:
                 print(f"   {entry}")
             print(f"{Fore.GREEN}✅ Rollback complete.")
+        elif choice.isdigit() and 1 <= int(choice) <= len(shown):
+            target = shown[int(choice) - 1]
+            result, _ = rollback_file(target)
+            print(f"   {result}")
+            print(f"{Fore.GREEN}✅ Rollback complete.")
+        else:
+            print(f"{Fore.RED}   Invalid choice.")
         sys.exit(0)
     # -----------------------------
 

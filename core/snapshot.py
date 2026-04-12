@@ -112,6 +112,71 @@ def rollback_from_disk() -> tuple[list[str], str]:
     return restored, command
 
 
+def rollback_file(filepath: str) -> tuple[str, str]:
+    """
+    Restore a single file from the last session on disk.
+    Returns (status, command) where status is a result string.
+    Does NOT remove the session file — other files are still restorable.
+    """
+    if not os.path.exists(SESSION_FILE):
+        return "no_session", ""
+
+    with open(SESSION_FILE) as f:
+        payload = json.load(f)
+
+    command = payload.get("command", "")
+    abs_path = os.path.abspath(filepath)
+
+    # Try to match by absolute path or by basename
+    files = payload.get("files", {})
+    matched_key = None
+    for key in files:
+        if key == abs_path or os.path.basename(key) == os.path.basename(filepath):
+            matched_key = key
+            break
+
+    if matched_key is None:
+        return "not_found", command
+
+    encoded = files[matched_key]
+    original_content = base64.b64decode(encoded) if encoded is not None else None
+
+    try:
+        if original_content is None:
+            if os.path.exists(matched_key):
+                os.remove(matched_key)
+            result = f"deleted  {matched_key}"
+        else:
+            os.makedirs(os.path.dirname(matched_key), exist_ok=True)
+            with open(matched_key, "wb") as f:
+                f.write(original_content)
+            result = f"restored {matched_key}"
+    except Exception as e:
+        result = f"FAILED   {matched_key} ({e})"
+
+    # Remove this file from the session so it can't be rolled back twice
+    del payload["files"][matched_key]
+    if payload["files"]:
+        with open(SESSION_FILE, "w") as f:
+            json.dump(payload, f, indent=2)
+    else:
+        os.remove(SESSION_FILE)
+
+    return result, command
+
+
+def list_session_files() -> tuple[list[str], str]:
+    """
+    Return (list of file paths in last session, original command).
+    Used by --rollback to show what's restorable.
+    """
+    if not os.path.exists(SESSION_FILE):
+        return [], ""
+    with open(SESSION_FILE) as f:
+        payload = json.load(f)
+    return list(payload.get("files", {}).keys()), payload.get("command", "")
+
+
 def clear_snapshots() -> None:
     """
     Discard in-memory snapshots without restoring (called on success).
