@@ -207,6 +207,34 @@
     "cleanup_files": []
   },
   {
+    "_comment": "=== INTERCEPTOR UNIT TESTS — Node.js, Docker, Git (direct call, no subprocess) ===",
+    "id": "interceptor_nodejs",
+    "description": "Interceptors #12–14 — Node.js: Cannot find module, npm ERR!, TypeScript errors",
+    "type": "python_run",
+    "command": "python3 tests/test_files/interceptors/test_nodejs.py",
+    "expect_exit_code": 0,
+    "reset_after": false,
+    "cleanup_files": []
+  },
+  {
+    "id": "interceptor_docker",
+    "description": "Interceptors #15–18 — Docker: missing image, port conflict, name collision, no daemon",
+    "type": "python_run",
+    "command": "python3 tests/test_files/interceptors/test_docker.py",
+    "expect_exit_code": 0,
+    "reset_after": false,
+    "cleanup_files": []
+  },
+  {
+    "id": "interceptor_git",
+    "description": "Interceptors #19–23 — Git: merge conflict, detached HEAD, push rejected, not a repo",
+    "type": "python_run",
+    "command": "python3 tests/test_files/interceptors/test_git.py",
+    "expect_exit_code": 0,
+    "reset_after": false,
+    "cleanup_files": []
+  },
+  {
     "_comment": "=== SECURITY TESTS — schema validation, no YOLO subprocess ===",
     "id": "security_validate_commands",
     "description": "Unit — FixResult.is_valid() against dangerous command patterns",

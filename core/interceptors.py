@@ -313,5 +313,192 @@ def run_auto_intercept(
                 except Exception:
                     pass
 
+    # ── NODE.JS ───────────────────────────────────────────────────────────────
+
+    # --- 12. Node.js: Cannot find module (runtime require()) ---
+    if "Cannot find module" in error_msg and "error TS" not in error_msg:
+        match = re.search(r"Cannot find module '([^']+)'", error_msg)
+        if match:
+            mod = match.group(1)
+            # Relative path → missing local file, not an npm package
+            if mod.startswith("."):
+                missing_file = mod if mod.endswith((".js", ".ts")) else mod + ".js"
+                return FixResult(
+                    command=f"touch {missing_file}",
+                    summary=f"Missing local module: {mod}",
+                    plan=f"Create stub file {missing_file} so require() resolves.",
+                    source="interceptor",
+                )
+            else:
+                # Strip scope/subpath to get installable package name
+                pkg = mod.split("/")[0] if not mod.startswith("@") else "/".join(mod.split("/")[:2])
+                return FixResult(
+                    command=f"npm install {pkg}",
+                    summary=f"Missing npm package: {pkg}",
+                    plan=f"Install '{pkg}' via npm.",
+                    source="interceptor",
+                )
+
+    # --- 13. npm ERR! — missing package / failed install ---
+    if "npm ERR!" in error_msg:
+        # npm ERR! 404 → package doesn't exist, nothing safe to do, skip
+        if "404" in error_msg:
+            pass
+        else:
+            # ENOENT — node_modules missing entirely
+            if "ENOENT" in error_msg or "Cannot find" in error_msg:
+                return FixResult(
+                    command="npm install",
+                    summary="npm: node_modules missing or incomplete",
+                    plan="Run npm install to restore all dependencies.",
+                    source="interceptor",
+                )
+            # peer dep / ERESOLVE conflicts
+            if "ERESOLVE" in error_msg or "peer dep" in error_msg.lower():
+                return FixResult(
+                    command="npm install --legacy-peer-deps",
+                    summary="npm: peer dependency conflict",
+                    plan="Retry install with --legacy-peer-deps to bypass strict peer resolution.",
+                    source="interceptor",
+                )
+
+    # --- 14. TypeScript compile errors (beyond TS2307) ---
+    # TS2304: Cannot find name → likely missing type declaration
+    if "error TS2304: Cannot find name" in error_msg:
+        match = re.search(r"Cannot find name '([^']+)'", error_msg)
+        if match:
+            name = match.group(1)
+            return FixResult(
+                command="npm install --save-dev @types/node",
+                summary=f"TypeScript: unknown name '{name}'",
+                plan="Install @types/node — covers most global Node.js names.",
+                source="interceptor",
+            )
+
+    # TS2345 / TS2322: type mismatch — report only, no safe auto-fix
+    # TS2339: Property does not exist
+    if "error TS2339: Property" in error_msg:
+        match = re.search(r"Property '([^']+)' does not exist on type '([^']+)'", error_msg)
+        if match:
+            prop, typ = match.groups()
+            return FixResult(
+                command=f"echo 'TS2339: Property {prop!r} missing on {typ!r} — fix type or cast'",
+                summary=f"TypeScript: property '{prop}' missing on type '{typ}'",
+                plan="Cast the object with `as any` or extend the interface to include the property.",
+                source="interceptor",
+            )
+
+    # ── DOCKER ────────────────────────────────────────────────────────────────
+
+    # --- 15. Docker: image not found / pull required ---
+    if "Unable to find image" in error_msg or \
+       ("docker" in error_msg.lower() and "No such image" in error_msg):
+        match = re.search(r"Unable to find image '([^']+)'", error_msg) or \
+                re.search(r"No such image: ([^\s]+)", error_msg)
+        if match:
+            image = match.group(1)
+            return FixResult(
+                command=f"docker pull {image}",
+                summary=f"Docker image not found: {image}",
+                plan=f"Pull image '{image}' from the registry.",
+                source="interceptor",
+            )
+
+    # --- 16. Docker: port already in use (bind error) ---
+    if "driver failed programming external connectivity" in error_msg or \
+       ("docker" in error_msg.lower() and "address already in use" in error_msg.lower()):
+        match = re.search(r":(\d{2,5})", error_msg)
+        if match:
+            port = match.group(1)
+            return FixResult(
+                command=f"lsof -ti :{port} | xargs kill -9",
+                summary=f"Docker port conflict on :{port}",
+                plan=f"Kill the process holding port {port} so Docker can bind to it.",
+                source="interceptor",
+            )
+
+    # --- 17. Docker: container name already in use ---
+    if "Conflict. The container name" in error_msg or \
+       "is already in use by container" in error_msg:
+        match = re.search(r'The container name "?/?([^"]+)"? is already in use', error_msg)
+        if match:
+            name = match.group(1).lstrip("/")
+            return FixResult(
+                command=f"docker rm -f {name}",
+                summary=f"Docker container name conflict: {name}",
+                plan=f"Remove the existing container '{name}' so the new one can start.",
+                source="interceptor",
+            )
+
+    # --- 18. Docker: daemon not running ---
+    if "Cannot connect to the Docker daemon" in error_msg or \
+       "Is the docker daemon running" in error_msg:
+        return FixResult(
+            command="open -a Docker" if os.uname().sysname == "Darwin" else "sudo systemctl start docker",
+            summary="Docker daemon is not running",
+            plan="Start the Docker daemon.",
+            source="interceptor",
+        )
+
+    # ── GIT ───────────────────────────────────────────────────────────────────
+
+    # --- 19. Git: merge conflict present ---
+    if "CONFLICT" in error_msg and "Merge conflict" in error_msg or \
+       ("Automatic merge failed" in error_msg and "fix conflicts" in error_msg):
+        return FixResult(
+            command="git merge --abort",
+            summary="Git merge conflict detected",
+            plan="Abort the conflicting merge so the repo returns to a clean state. Re-merge manually after resolving.",
+            source="interceptor",
+        )
+
+    # --- 20. Git: detached HEAD ---
+    if "HEAD detached at" in error_msg or "detached HEAD" in error_msg.lower():
+        # Try to find the default branch
+        default_branch = "main"
+        try:
+            import subprocess
+            out = subprocess.check_output(
+                ["git", "symbolic-ref", "refs/remotes/origin/HEAD"],
+                stderr=subprocess.DEVNULL, text=True
+            ).strip()
+            default_branch = out.split("/")[-1] or "main"
+        except Exception:
+            pass
+        return FixResult(
+            command=f"git checkout {default_branch}",
+            summary="Git HEAD is detached",
+            plan=f"Re-attach HEAD by checking out '{default_branch}'.",
+            source="interceptor",
+        )
+
+    # --- 21. Git: push rejected (non-fast-forward) ---
+    if "rejected" in error_msg and ("non-fast-forward" in error_msg or "fetch first" in error_msg):
+        return FixResult(
+            command="git pull --rebase && git push",
+            summary="Git push rejected — remote has diverged",
+            plan="Rebase local commits on top of the remote, then push.",
+            source="interceptor",
+        )
+
+    # --- 22. Git: nothing to push / up to date ---
+    if "Everything up-to-date" in error_msg or \
+       ("git" in error_msg.lower() and "nothing to commit" in error_msg):
+        return FixResult(
+            command="echo 'Git: already up-to-date, nothing to push'",
+            summary="Git: nothing to push",
+            plan="Working tree and remote are already in sync.",
+            source="interceptor",
+        )
+
+    # --- 23. Git: not a git repository ---
+    if "not a git repository" in error_msg.lower():
+        return FixResult(
+            command="git init",
+            summary="Not a git repository",
+            plan="Initialise a new git repo in the current directory.",
+            source="interceptor",
+        )
+
     # If no interceptors match, pass it to the Brain
     return None
