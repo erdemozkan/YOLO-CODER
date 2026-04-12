@@ -160,6 +160,7 @@ def main():
     print_banner()
     if len(sys.argv) < 2:
         print(f"{Fore.YELLOW}Usage: yolo <command>")
+        print(f"{Fore.YELLOW}       yolo --explain <command>  Show plain-English diff after fix")
         print(f"{Fore.YELLOW}       yolo --watch <command>   Auto-fix on every file change")
         print(f"{Fore.YELLOW}       yolo --scan              Scan project for secrets & credentials")
         print(f"{Fore.YELLOW}       yolo --rollback          Undo changes from the last run")
@@ -185,6 +186,8 @@ def main():
 
     # ---- PARSE YOLO FLAGS (strip before passing command downstream) ----
     dry_run  = "--dry-run" in raw_args
+    explain  = "--explain" in raw_args
+    raw_args = [a for a in raw_args if a != "--explain"]
 
     def _pop_flag(flag: str) -> str | None:
         """Extract --flag value from raw_args, removing both tokens in-place."""
@@ -398,6 +401,9 @@ def main():
         if exit_code == 0:
             print(stdout)
             logger.record_attempt(result, fix_code, 0, "")
+            if explain:
+                from core.explain import render_explain
+                print(render_explain(result, original_stderr))
             clear_snapshots()
             logger.flush("success", modified_files())
             # Write to fix memory so next time we skip the LLM
