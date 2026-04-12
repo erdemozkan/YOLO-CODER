@@ -322,14 +322,18 @@ def main():
 
         print(f"{Fore.GREEN}💡 Suggested Fix: {Style.BRIGHT}{result.command}")
 
-        # 4a. DRY-RUN: show what would happen and stop here
+        # 4a. DRY-RUN: show diff and stop
         if dry_run:
-            print(f"\n{Fore.YELLOW}--- DRY-RUN PREVIEW ---")
-            print(f"{Fore.YELLOW}  Would apply : {Style.BRIGHT}{result.command}")
-            print(f"{Fore.YELLOW}  Plan        : {Style.RESET_ALL}{result.plan}")
-            print(f"{Fore.YELLOW}  Source      : {Style.RESET_ALL}{result.source}")
-            print(f"{Fore.YELLOW}-----------------------")
-            print(f"{Fore.YELLOW}No changes made. Remove --dry-run to apply the fix.")
+            from core.diff import render_diff
+            diff_output = render_diff(result.command)
+            # Patch in source on the "Source:" line
+            diff_output = diff_output.replace(
+                "  \033[2mSource  :\033[0m  ",
+                f"  \033[2mSource  :\033[0m  {result.source}"
+            )
+            print(diff_output)
+            print(f"{Fore.YELLOW}  Plan    :  {Style.RESET_ALL}{result.plan}")
+            print(f"\n{Fore.YELLOW}No changes made. Remove --dry-run to apply the fix.")
             logger.flush("dry_run")
             sys.exit(0)
 
