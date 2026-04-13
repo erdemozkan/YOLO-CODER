@@ -4,3 +4,4 @@ __pycache__/
 *$py.class
 .env
 YOLO-MODEL-FILES/
+.DS_Store
