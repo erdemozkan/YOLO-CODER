@@ -2,8 +2,8 @@ class Yolo < Formula
   include Language::Python::Virtualenv
 
   desc "AI agent that fixes your broken CLI commands automatically using a local LLM"
-  homepage "https://github.com/erdemozkan/YOLO-APR"
-  url "https://github.com/erdemozkan/YOLO-APR/archive/refs/tags/v0.0.2.tar.gz"
+  homepage "https://github.com/erdemozkan/YOLO-CODER"
+  url "https://github.com/erdemozkan/YOLO-CODER/archive/refs/tags/v0.0.2.tar.gz"
   # sha256 will be filled in after the release tarball is published
   # sha256 "FILL_IN_AFTER_RELEASE"
   license "MIT"

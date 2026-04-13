@@ -86,10 +86,12 @@ yoco --config               # print active config
 
 YOLO expects an Ollama-compatible endpoint at `http://localhost:11434/v1`.
 
+**Our fine-tuned models are available on Hugging Face:**
+
 | Model | Notes |
 |---|---|
-| `yolo-coder` | Default. Fine-tuned Qwen2.5-Coder-1.5B on 2,250 CLI error/fix pairs. |
-| `yolo-7b` | Larger. Fine-tuned Qwen2.5-Coder-7B on the same dataset. Q4_K_M GGUF, ~4.5GB. |
+| `erdemozkan/YOLO-1.5B-Qwen-Coder` | Default. Fine-tuned Qwen2.5-Coder-1.5B on 2,250 CLI error/fix pairs. Pull with: `ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder` |
+| `erdemozkan/YOLO-7B-Qwen-Coder` | Larger. Fine-tuned Qwen2.5-Coder-7B on the same dataset. Pull with: `ollama run hf.co/erdemozkan/YOLO-7B-Qwen-Coder` |
 | `qwen2.5-coder:7b` | Vanilla base, no fine-tuning. |
 
 Fine-tuning uses MLX LoRA on Apple Silicon. Training data is in `YOLO-MODEL-FILES/data/`. Dataset generator is `YOLO-MODEL-FILES/generate_dataset.py`. Format is ChatML with a system prompt telling the model to output a single bare bash command.

@@ -37,9 +37,9 @@ dependencies = [
 yoco = "yoco:main"
 
 [project.urls]
-Homepage = "https://github.com/erdemozkan/YOLO-APR"
-Repository = "https://github.com/erdemozkan/YOLO-APR"
-"Bug Tracker" = "https://github.com/erdemozkan/YOLO-APR/issues"
+Homepage = "https://github.com/erdemozkan/YOLO-CODER"
+Repository = "https://github.com/erdemozkan/YOLO-CODER"
+"Bug Tracker" = "https://github.com/erdemozkan/YOLO-CODER/issues"
 
 [tool.setuptools]
 py-modules = ["yoco", "yoco_replace"]

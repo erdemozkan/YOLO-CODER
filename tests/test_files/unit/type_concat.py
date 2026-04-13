@@ -3,5 +3,5 @@
 # Expected fix: wrap error_count with str()
 
 error_count = 5
-message = "Total errors: " + error_count
+message = "Total errors: " + str(error_count)
 print(message)

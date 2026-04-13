@@ -75,15 +75,15 @@ Fix fails → roll back every file to its pre-YOLO state, try again.
 ## Install
 
 ```bash
-git clone https://github.com/erdemozkan/YOLO-APR
-cd YOLO-APR
+git clone https://github.com/erdemozkan/YOLO-CODER
+cd YOLO-CODER
 pip install -r requirements.txt
 
-# Install Ollama (https://ollama.ai) then pull the model:
-ollama pull qwen2.5-coder:7b
+# Install Ollama (https://ollama.ai) then pull our fine-tuned YOLO models directly from Hugging Face:
+ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder
 
-# Or use the fine-tuned YOLO model (faster, trained on CLI errors):
-ollama create yolo-coder -f YOLO-MODEL-FILES/Modelfile
+# Or, if you want to use the vanilla base model:
+ollama pull qwen2.5-coder:7b
 ```
 
 ---
@@ -138,13 +138,31 @@ yoco --model yolo-7b python3 myapp.py
 
 ## The model
 
-YOLO ships with a fine-tuned `Qwen2.5-Coder` model trained specifically on CLI error/fix pairs. It's trained to output exactly one bare shell command — no markdown, no explanation, no backticks. Just the fix.
+YOLO ships with fine-tuned `Qwen2.5-Coder` models trained specifically on CLI error/fix pairs. It's trained to output exactly one bare shell command — no markdown, no explanation, no backticks. Just the fix.
+
+**Our fine-tuned models are live on Hugging Face!**
+
+### 1. Using with Ollama
+You can pull and run the models directly via Ollama:
+```bash
+# For fast fixes, common errors, and low RAM usage:
+ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder
+
+# For complex errors and better reasoning:
+ollama run hf.co/erdemozkan/YOLO-7B-Qwen-Coder
+```
+
+### 2. Using with LM Studio or llama.cpp
+1. Browse to my Hugging Face profile: [erdemozkan](https://huggingface.co/erdemozkan).
+2. Open the model repository (`YOLO-1.5B-Qwen-Coder` or `YOLO-7B-Qwen-Coder`).
+3. Download the `.gguf` file from the "Files" section.
+4. Load the file into LM Studio or run it with your `llama.cpp` server.
 
 | Model | Size | Best for |
 |---|---|---|
-| `yolo-coder` | 1.5B (Q4) | Fast fixes, common errors, low RAM |
-| `yolo-7b` | 7B (Q4_K_M, ~4.5GB) | Complex errors, better reasoning |
-| `qwen2.5-coder:7b` | 7B | If you want the vanilla base |
+| `YOLO-1.5B-Qwen-Coder` | 1.5B | Fast fixes, common errors, low RAM |
+| `YOLO-7B-Qwen-Coder` | 7B | Complex errors, better reasoning |
+| `qwen2.5-coder:7b` | 7B | Vanilla base model |
 
 Training data: 2,250 error/fix pairs covering Python, Node, npm, TypeScript, Docker, Git, web frameworks, auth, async, CORS, circular imports, and more. Format: ChatML LoRA on Apple Silicon M-series.
 

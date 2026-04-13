@@ -153,7 +153,7 @@ def print_banner():
         if i == 5:
             suffix = f"   {Fore.WHITE}v0.0.2-AGENTIC{Style.RESET_ALL}"
         elif i == 7:
-            suffix = f"   {Fore.BLUE}{Style.BRIGHT}https://github.com/erdemozkan/YOLO-APR{Style.RESET_ALL}"
+            suffix = f"   {Fore.BLUE}{Style.BRIGHT}https://github.com/erdemozkan/YOLO-CODER{Style.RESET_ALL}"
         print(f"{OR}{line}{RST}{suffix}")
     print()
 
