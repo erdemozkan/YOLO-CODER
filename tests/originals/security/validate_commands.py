@@ -19,7 +19,7 @@ CASES = [
     ("chmod 644 titanium.txt",        True,  "chmod 644 — legitimate"),
     ("lsof -ti :8080 | xargs kill -9",True,  "kill port process — legitimate"),
     ("echo 'Fixed colon in app.py'",  True,  "echo — legitimate"),
-    ("python3 yolo_replace.py f 10 x",True,  "yolo_replace — legitimate"),
+    ("python3 yoco_replace.py f 10 x",True,  "yoco_replace — legitimate"),
 
     # --- Should FAIL: empty / non-command ---
     ("",                              False, "empty string"),

@@ -7,7 +7,7 @@ YOLO is an automated CLI repair tool. You run a broken command; YOLO catches the
 ## What it does
 
 ```
-python3 yolo.py python3 myapp.py
+yoco python3 myapp.py
 ```
 
 1. Runs the command.
@@ -25,7 +25,7 @@ If it works, it snapshots the fix. If it doesn't, it rolls back. The user sees w
 ## Architecture
 
 ```
-yolo.py                  ← entry point, CLI flags, main loop
+yoco.py                  ← entry point, CLI flags, main loop
 core/
   agent.py               ← LLM interaction, prompt construction, response parsing
   interceptors.py        ← 23 deterministic fix rules (no LLM involved)
@@ -42,7 +42,7 @@ core/
   watcher.py             ← --watch mode: re-runs on file change
   logger.py              ← structured run logging
   utils.py               ← small shared helpers
-yolo_replace.py          ← targeted single-line file patcher
+yoco_replace.py          ← targeted single-line file patcher
 skills/                  ← pluggable skill modules
 tests/
   run_tests.py           ← test runner
@@ -68,16 +68,16 @@ tests/
 ## Key flags
 
 ```
-python3 yolo.py <command>              # fix mode
-python3 yolo.py --dry-run <command>    # show fix without applying
-python3 yolo.py --explain <command>    # run + deep-dive AI explanation
-python3 yolo.py --watch <command>      # re-run on file change
-python3 yolo.py --rollback             # interactive picker: undo last session
-python3 yolo.py --rollback <file>      # restore specific file
-python3 yolo.py --history              # browse past runs
-python3 yolo.py --history N            # show run N in detail
-python3 yolo.py --model <name>         # override model for this run
-python3 yolo.py --config               # print active config
+yoco <command>              # fix mode
+yoco --dry-run <command>    # show fix without applying
+yoco --explain <command>    # run + deep-dive AI explanation
+yoco --watch <command>      # re-run on file change
+yoco --rollback             # interactive picker: undo last session
+yoco --rollback <file>      # restore specific file
+yoco --history              # browse past runs
+yoco --history N            # show run N in detail
+yoco --model <name>         # override model for this run
+yoco --config               # print active config
 ```
 
 ---

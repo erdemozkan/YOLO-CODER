@@ -21,12 +21,12 @@ def _vis(s): return len(_ANSI_RE.sub("", s))
 def _pad(s, w): return s + " " * max(0, w - _vis(s))
 
 
-def _parse_yolo_replace(command: str):
+def _parse_yoco_replace(command: str):
     """
-    Extract (filepath, line_number, new_text) from a yolo_replace command.
-    Returns None if not a yolo_replace command.
+    Extract (filepath, line_number, new_text) from a yoco_replace command.
+    Returns None if not a yoco_replace command.
     """
-    m = re.search(r"python3 yolo_replace\.py\s+(\S+)\s+(\d+)\s+(.*)", command)
+    m = re.search(r"python3 yoco_replace\.py\s+(\S+)\s+(\d+)\s+(.*)", command)
     if not m:
         return None
     filepath, line_num, new_text = m.groups()
@@ -41,10 +41,10 @@ def _parse_yolo_replace(command: str):
 def render_diff(command: str, context_lines: int = 3) -> str:
     """
     Given a fix command, return a formatted diff string.
-    For yolo_replace commands: shows a side-by-side before/after diff.
+    For yoco_replace commands: shows a side-by-side before/after diff.
     For other commands: shows a plain command preview.
     """
-    parsed = _parse_yolo_replace(command)
+    parsed = _parse_yoco_replace(command)
     if not parsed:
         return _plain_preview(command)
 
@@ -118,7 +118,7 @@ def _truncate(s: str, max_w: int) -> str:
 
 
 def _plain_preview(command: str) -> str:
-    """Fallback for non-yolo_replace commands."""
+    """Fallback for non-yoco_replace commands."""
     OR_ = "\033[38;5;208m"
     return (
         f"\n{OR_}  ⚡  {BOLD}DRY-RUN PREVIEW{RST}\n"

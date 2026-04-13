@@ -34,8 +34,8 @@ _SOURCE_LABEL = {
 }
 
 
-def _parse_yolo_replace(command: str):
-    m = re.search(r"python3 yolo_replace\.py\s+(\S+)\s+(\d+)\s+(.*)", command)
+def _parse_yoco_replace(command: str):
+    m = re.search(r"python3 yoco_replace\.py\s+(\S+)\s+(\d+)\s+(.*)", command)
     if not m:
         return None
     filepath, line_num, new_text = m.groups()
@@ -127,8 +127,8 @@ def render_explain(result: FixResult, original_stderr: str) -> str:
     # Plan
     out.append(f"  {DIM}Plan    :{RST}  {result.plan}\n")
 
-    # Diff (only for yolo_replace commands)
-    parsed = _parse_yolo_replace(result.command)
+    # Diff (only for yoco_replace commands)
+    parsed = _parse_yoco_replace(result.command)
     if parsed:
         filepath, line_num, new_text = parsed
         out.append(f"  {DIM}File    :{RST}  {filepath}  {DIM}line {line_num}{RST}\n")

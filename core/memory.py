@@ -9,7 +9,7 @@ Storage: ~/.yolo/fix_memory.jsonl  (one JSON record per line)
 Record format:
   {
     "fingerprint": "<error type>|<normalised call site>",
-    "command":     "python3 yolo_replace.py ...",
+    "command":     "python3 yoco_replace.py ...",
     "hits":        3,        # times this fix was applied successfully
     "last_seen":   "2026-04-12T10:00:00"
   }

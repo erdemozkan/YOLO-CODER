@@ -53,8 +53,8 @@ _PROTECTED_PATH_PREFIXES = (
     "tests/",
     "core/",
     "skills/",
-    "yolo.py",
-    "yolo_replace.py",
+    "yoco.py",
+    "yoco_replace.py",
 )
 
 # ---------------------------------------------------------------------------

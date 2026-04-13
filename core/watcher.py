@@ -2,7 +2,7 @@
 YOLO Watch Mode — Sub-Agent
 ============================
 Standalone file watcher that re-invokes `yolo <cmd>` whenever a source
-file changes.  Launched by yolo.py when --watch is detected; runs as an
+file changes.  Launched by yoco.py when --watch is detected; runs as an
 independent process so the fix logic stays fully decoupled.
 
 Usage (internal):
@@ -55,8 +55,8 @@ def _changed(old: dict, new: dict) -> list[str]:
 
 
 def _run_yolo(cmd_tokens: list[str], root: Path) -> int:
-    """Run `python3 yolo.py <cmd>` and stream output. Returns exit code."""
-    full_cmd = [sys.executable, str(root / "yolo.py")] + cmd_tokens
+    """Run `python3 yoco.py <cmd>` and stream output. Returns exit code."""
+    full_cmd = [sys.executable, str(root / "yoco.py")] + cmd_tokens
     proc = subprocess.Popen(full_cmd, cwd=str(root))
     try:
         proc.wait()

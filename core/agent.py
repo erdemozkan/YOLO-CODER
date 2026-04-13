@@ -146,9 +146,9 @@ def _build_system_prompt(ctx: ProjectContext) -> str:
         "You are a CLI repair tool. "
         "Output ONLY a single bare bash command to fix the error. "
         "No explanation. No markdown. No backticks. No multi-line output.\n\n"
-        "To fix a Python source file, use the yolo_replace tool:\n"
-        "  python3 yolo_replace.py <filepath> <line_number> <new_line_content>\n"
-        "Example: python3 yolo_replace.py src/app.py 7 '    return a / b if b != 0 else 0'\n"
+        "To fix a Python source file, use the yoco_replace tool:\n"
+        "  python3 yoco_replace.py <filepath> <line_number> <new_line_content>\n"
+        "Example: python3 yoco_replace.py src/app.py 7 '    return a / b if b != 0 else 0'\n"
         "The line number comes from the traceback. The new content replaces that exact line.\n\n"
         "RULES for the replacement line:\n"
         "- Must be valid Python on a SINGLE line.\n"
@@ -208,7 +208,7 @@ class YoloAgent:
             try:
                 lines = fpath.read_text().splitlines()
                 numbered = "\n".join(f"{i+1}: {ln}" for i, ln in enumerate(lines))
-                # Use full relative path so LLM uses it verbatim in yolo_replace
+                # Use full relative path so LLM uses it verbatim in yoco_replace
                 try:
                     fpath_rel = str(fpath.resolve().relative_to(Path.cwd()))
                 except ValueError:

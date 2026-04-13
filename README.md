@@ -25,7 +25,7 @@ You run a command. It breaks. You stare at the error. You Google it. You copy-pa
 **Or:** you run YOLO. It sees the error. It fixes it. It retries. You get coffee.
 
 ```bash
-$ python3 yolo.py python3 myapp.py
+$ yoco python3 myapp.py
 ```
 
 That's it. That's the whole interface.
@@ -92,31 +92,31 @@ ollama create yolo-coder -f YOLO-MODEL-FILES/Modelfile
 
 ```bash
 # Basic: fix whatever breaks
-python3 yolo.py python3 myapp.py
-python3 yolo.py npm run dev
-python3 yolo.py cargo build
-python3 yolo.py docker-compose up
+yoco python3 myapp.py
+yoco npm run dev
+yoco cargo build
+yoco docker-compose up
 
 # See what it would do without doing it
-python3 yolo.py --dry-run python3 myapp.py
+yoco --dry-run python3 myapp.py
 
 # Get a full AI explanation of what went wrong and why
-python3 yolo.py --explain python3 myapp.py
+yoco --explain python3 myapp.py
 
 # Watch mode: re-run on every file save
-python3 yolo.py --watch python3 myapp.py
+yoco --watch python3 myapp.py
 
 # Undo everything YOLO changed in the last session
-python3 yolo.py --rollback
+yoco --rollback
 
 # Undo a specific file
-python3 yolo.py --rollback src/main.py
+yoco --rollback src/main.py
 
 # Browse history of past runs
-python3 yolo.py --history
+yoco --history
 
 # Use the bigger 7B model for hard errors
-python3 yolo.py --model yolo-7b python3 myapp.py
+yoco --model yolo-7b python3 myapp.py
 ```
 
 ---
@@ -156,15 +156,15 @@ YOLO snapshots every file it touches before making any changes. If a fix fails a
 
 ```bash
 # See what YOLO changed in the last session
-python3 yolo.py --rollback
+yoco --rollback
 # → numbered list of modified files, pick one or press 'a' to undo all
 
 # See the last 20 runs
-python3 yolo.py --history
+yoco --history
 # → table: date / command / outcome / source (interceptor / memory / LLM)
 
 # See details of run #5
-python3 yolo.py --history 5
+yoco --history 5
 ```
 
 ---

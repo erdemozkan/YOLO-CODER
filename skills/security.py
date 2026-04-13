@@ -36,14 +36,14 @@ IGNORED_DIRS  = {".git", "node_modules", "venv", ".venv", "__pycache__", ".next"
 IGNORED_FILES = {".pyc", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico",
                  ".exe", ".lock", ".bin", ".woff", ".woff2", ".ttf", ".eot", ".pdf",
                  ".gguf", ".safetensors", ".pt", ".pth", ".ckpt", ".h5"}
-SKIP_FILES    = {"yolo.py", "security.py"}   # don't flag the tool itself
+SKIP_FILES    = {"yoco.py", "security.py"}   # don't flag the tool itself
 
 
 # ── Core scanner ──────────────────────────────────────────────────────────────
 
 def scan_for_keys(start_path="."):
     """
-    Legacy interface — used by the existing security gate in yolo.py.
+    Legacy interface — used by the existing security gate in yoco.py.
     Returns list of (file_path, key_type) tuples.
     """
     results = deep_scan(start_path)

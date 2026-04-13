@@ -57,7 +57,7 @@ def run_auto_intercept(
     Returns a FixResult on match, or None if no interceptor matched.
 
     When dry_run=True interceptors that write files will skip the write but still
-    return a FixResult so yolo.py can display what would have happened.
+    return a FixResult so yoco.py can display what would have happened.
     """
 
     # --- 1. SyntaxError: Missing Colon ---

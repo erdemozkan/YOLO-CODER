@@ -304,6 +304,7 @@ def main():
 
     original_cmd = " ".join(args)
     set_command(original_cmd)
+    _t0 = time.time()
 
     # ---- MODEL CONFIG + PRE-FLIGHT ----
     cfg = load_config(
@@ -318,6 +319,61 @@ def main():
 
     if dry_run:
         print(f"{Fore.YELLOW}⚠  DRY-RUN MODE — no files will be modified")
+
+    def _summary(outcome: str, attempts: int = 0, source: str = "") -> None:
+        elapsed = time.time() - _t0
+        _W  = "\033[97m"
+        _DIM = "\033[2m"
+        _R  = "\033[0m"
+        _G  = "\033[92m"
+        _RD = "\033[91m"
+        _Y  = "\033[93m"
+        _C  = "\033[96m"
+
+        if outcome == "clean":
+            bugs, heals = 0, 0
+            confidence = "∞%  (Nothing Was Broken)"
+            conf_color = _G
+        elif outcome == "fixed":
+            bugs, heals = 1, attempts
+            if source == "interceptor":
+                confidence = "99%  (Rule-Based, Zero Doubt)"
+            elif source == "memory":
+                confidence = "97%  (Been There, Fixed That)"
+            else:
+                confidence = f"{max(70, 95 - (attempts - 1) * 8)}%  (No Permission Asked)"
+            conf_color = _G
+        elif outcome == "dry_run":
+            bugs, heals = 0, 0
+            confidence = "—    (Dry Run, No Changes Made)"
+            conf_color = _Y
+        else:  # failed
+            bugs, heals = 0, attempts
+            confidence = "0%   (We Tried. We Really Did.)"
+            conf_color = _RD
+
+        INNER = 50  # visible characters between the two │ borders
+
+        def _row(label: str, value: str, val_color: str = _W) -> None:
+            # visible content: "  {label:<19} {value}"
+            prefix = f"  {label:<19} "
+            visible = prefix + value
+            pad = " " * max(0, INNER - len(visible))
+            print(f"{_C}│{_R}{_DIM}{prefix}{_R}{val_color}{value}{_R}{pad}{_C}│{_R}")
+
+        title = "🧠  YOLO CODER SUMMARY"
+        # 🧠 is 2 wide visually, but Python counts it as 1 char → pad manually
+        title_pad = (INNER - len(title) - 1) // 2
+        title_line = " " * title_pad + title + " " * (INNER - len(title) - title_pad)
+
+        print(f"\n{_C}┌{'─' * INNER}┐{_R}")
+        print(f"{_C}│{_R}{title_line}{_C}│{_R}")
+        print(f"{_C}├{'─' * INNER}┤{_R}")
+        _row("Bugs Obliterated   :", str(bugs))
+        _row("Self-Heals         :", str(heals))
+        _row("Time Elapsed       :", f"{elapsed:.1f}s")
+        _row("Confidence         :", confidence, conf_color)
+        print(f"{_C}└{'─' * INNER}┘{_R}\n")
 
     # --- USING THE BYPASSED SKILL ---
     run_cmd = SKILL_REGISTRY["run_in_sandbox"]
@@ -353,6 +409,7 @@ def main():
     if exit_code == 0:
         print(stdout)
         print(f"{Fore.GREEN}✨ CODE WORKS")
+        _summary("clean")
         sys.exit(0)
 
     print(stdout)
@@ -430,15 +487,16 @@ def main():
             print(f"\n{Fore.YELLOW}No changes made. Remove --dry-run to apply the fix.")
             logger.flush("dry_run")
             _history.record(original_cmd, "dry_run", stderr, result.command, result.source, attempt, [])
+            _summary("dry_run")
             sys.exit(0)
 
         # 4b. Execute Fix (using the bypassed skill or native replacer)
         print(f"{Fore.CYAN}🔧 Applying fix...")
 
-        if result.command.startswith("python3 yolo_replace.py"):
+        if result.command.startswith("python3 yoco_replace.py"):
             try:
                 import re
-                m = re.search(r"python3 yolo_replace.py\s+(\S+)\s+(\d+)\s+(.*)", result.command)
+                m = re.search(r"python3 yoco_replace.py\s+(\S+)\s+(\d+)\s+(.*)", result.command)
                 if m:
                     filepath, line_num, new_text = m.groups()
                     # Strip surrounding shell quotes the model may have added
@@ -489,6 +547,7 @@ def main():
             if result.source != "interceptor":
                 remember(original_stderr, result.command)
             print(f"{Fore.GREEN}✨ CODE WORKS")
+            _summary("fixed", attempt, result.source)
             sys.exit(0)
         else:
             print(f"{Fore.RED}❌ Command failed again (Exit {exit_code})")
@@ -510,6 +569,7 @@ def main():
             print(f"   {entry}")
     logger.flush("rolled_back", mods, rolled_back=True)
     _history.record(original_cmd, "failed", original_stderr, "", "", max_attempts, mods)
+    _summary("failed", max_attempts)
 
 
 if __name__ == "__main__":

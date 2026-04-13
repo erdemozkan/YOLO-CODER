@@ -262,7 +262,7 @@ def run_test(tc: dict, live: bool = True) -> str:
 
     raw_cmd = tc["command"]
     if ttype == "yolo_run":
-        cmd = [sys.executable, str(ROOT / "yolo.py")] + raw_cmd.split()
+        cmd = [sys.executable, str(ROOT / "yoco.py")] + raw_cmd.split()
     elif ttype == "python_run":
         cmd = [sys.executable] + raw_cmd.split()[1:]
     else:
