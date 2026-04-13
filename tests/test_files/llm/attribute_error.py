@@ -7,4 +7,4 @@ def fetch_username():
     return None   # simulates a failed DB lookup
 
 username = fetch_username()
-print("Username:", username.strip())
+print("Username:", (username or "").strip())
