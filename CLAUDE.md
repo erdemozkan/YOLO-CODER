@@ -84,24 +84,73 @@ yoco --config               # print active config
 
 ## Models
 
-YOLO expects an Ollama-compatible endpoint at `http://localhost:11434/v1`.
+YOCO expects an Ollama-compatible endpoint at `http://localhost:11434/v1`. Ollama must be running before YOCO starts.
 
-**Our fine-tuned models are available on Hugging Face:**
-
-| Model | Notes |
-|---|---|
-| `erdemozkan/YOLO-1.5B-Qwen-Coder` | Default. Fine-tuned Qwen2.5-Coder-1.5B on 2,250 CLI error/fix pairs. Pull with: `ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder` |
-| `erdemozkan/YOLO-7B-Qwen-Coder` | Larger. Fine-tuned Qwen2.5-Coder-7B on the same dataset. Pull with: `ollama run hf.co/erdemozkan/YOLO-7B-Qwen-Coder` |
-| `qwen2.5-coder:7b` | Vanilla base, no fine-tuning. |
-
-Fine-tuning uses MLX LoRA on Apple Silicon. Training data is in `YOLO-MODEL-FILES/data/`. Dataset generator is `YOLO-MODEL-FILES/generate_dataset.py`. Format is ChatML with a system prompt telling the model to output a single bare bash command.
-
-To switch models permanently:
-
-```json
-// ~/.yolo/config.json
-{ "model": "yolo-7b" }
+```bash
+ollama serve   # or: open -a Ollama (macOS app)
 ```
+
+**Fine-tuned models on Hugging Face:**
+
+| Model | Size | HF Repo |
+|---|---|---|
+| `YOLO-1.5B-Qwen-Coder` | ~941MB | [erdemozkan/YOLO-1.5B-Qwen-Coder](https://huggingface.co/erdemozkan/YOLO-1.5B-Qwen-Coder) |
+| `YOLO-7B-Qwen-Coder` | ~4.4GB (Q4) | [erdemozkan/YOLO-7B-Qwen-Coder](https://huggingface.co/erdemozkan/YOLO-7B-Qwen-Coder) |
+
+### Option A — Pull directly via Ollama (simplest)
+
+```bash
+ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder
+ollama run hf.co/erdemozkan/YOLO-7B-Qwen-Coder
+```
+
+Then set the model name in config:
+
+```bash
+echo '{"model": "hf.co/erdemozkan/YOLO-7B-Qwen-Coder"}' > ~/.yolo/config.json
+```
+
+### Option B — Download GGUF manually and register
+
+```bash
+# 1. Download GGUF from HuggingFace Files tab:
+#    https://huggingface.co/erdemozkan/YOLO-7B-Qwen-Coder
+
+# 2. Create Modelfile (see YOLO-MODEL-FILES/Modelfile-7B for the template)
+cat > Modelfile <<'EOF'
+FROM ./YOLO-7B-Qwen-q4.gguf
+TEMPLATE """{{ if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+PARAMETER stop "<|im_start|>"
+PARAMETER stop "<|im_end|>"
+PARAMETER temperature 0.1
+PARAMETER top_p 0.1
+SYSTEM """You are a CLI repair tool. Output ONLY a single bare bash command to fix the error. No explanation. No markdown. No backticks."""
+EOF
+
+# 3. Register
+ollama create yolo-7b -f Modelfile
+
+# 4. Verify
+ollama run yolo-7b "ModuleNotFoundError: No module named 'requests'"
+# expected output: pip install requests
+
+# 5. Set as default
+echo '{"model": "yolo-7b"}' > ~/.yolo/config.json
+```
+
+### Override per run
+
+```bash
+yoco --model yolo-7b python3 myapp.py
+yoco --model hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder python3 myapp.py
+```
+
+Fine-tuning uses MLX LoRA on Apple Silicon. Training data is in `YOLO-MODEL-FILES/data/`. Dataset generator is `YOLO-MODEL-FILES/generate_dataset.py`. Format is ChatML with a system prompt enforcing single-command output.
 
 ---
 

@@ -74,16 +74,82 @@ Fix fails → roll back every file to its pre-YOLO state, try again.
 
 ## Install
 
+### 1. Clone and install YOCO
+
 ```bash
 git clone https://github.com/erdemozkan/YOLO-CODER
 cd YOLO-CODER
-pip install -r requirements.txt
+pip install -e .
+```
 
-# Install Ollama (https://ollama.ai) then pull our fine-tuned YOLO models directly from Hugging Face:
+### 2. Install Ollama
+
+Download from [ollama.ai](https://ollama.ai) or:
+
+```bash
+brew install ollama
+ollama serve   # start the server (runs on http://localhost:11434)
+```
+
+### 3. Set up the AI model
+
+**Option A — Pull directly from Hugging Face (easiest):**
+
+```bash
+# 1.5B model — fast, ~941MB, runs on any machine
 ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder
 
-# Or, if you want to use the vanilla base model:
-ollama pull qwen2.5-coder:7b
+# 7B model — smarter, ~4.4GB, needs ~6GB RAM
+ollama run hf.co/erdemozkan/YOLO-7B-Qwen-Coder
+```
+
+**Option B — Download GGUF manually and register:**
+
+```bash
+# Download the Q4 GGUF from HuggingFace
+# → https://huggingface.co/erdemozkan/YOLO-7B-Qwen-Coder/blob/main/YOLO-7B-Qwen-q4.gguf
+
+# Create a Modelfile
+cat > Modelfile <<'EOF'
+FROM ./YOLO-7B-Qwen-q4.gguf
+
+TEMPLATE """{{ if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+
+PARAMETER stop "<|im_start|>"
+PARAMETER stop "<|im_end|>"
+PARAMETER temperature 0.1
+PARAMETER top_p 0.1
+SYSTEM """You are a CLI repair tool. Output ONLY a single bare bash command to fix the error. No explanation. No markdown. No backticks."""
+EOF
+
+# Register with Ollama
+ollama create yolo-7b -f Modelfile
+
+# Verify it works
+ollama run yolo-7b "ModuleNotFoundError: No module named 'requests'"
+# → pip install requests
+```
+
+### 4. Configure YOCO to use your model
+
+```bash
+mkdir -p ~/.yolo
+# Use 1.5B (default, fast):
+echo '{"model": "hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder"}' > ~/.yolo/config.json
+
+# Or use 7B (if registered manually as above):
+echo '{"model": "yolo-7b"}' > ~/.yolo/config.json
+```
+
+### 5. Run it
+
+```bash
+yoco python3 myapp.py
 ```
 
 ---

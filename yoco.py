@@ -152,21 +152,22 @@ def print_banner():
         suffix = ""
         if i == 5:
             suffix = f"   {Fore.WHITE}v0.0.2-AGENTIC{Style.RESET_ALL}"
-        elif i == 7:
-            suffix = f"   {Fore.BLUE}{Style.BRIGHT}https://github.com/erdemozkan/YOLO-CODER{Style.RESET_ALL}"
         print(f"{OR}{line}{RST}{suffix}")
+    print(f"   {Fore.BLUE}{Style.BRIGHT}https://github.com/erdemozkan/YOLO-CODER{Style.RESET_ALL}")
     print()
 
 
 def main():
     print_banner()
     if len(sys.argv) < 2:
-        print(f"{Fore.YELLOW}Usage: yolo <command>")
-        print(f"{Fore.YELLOW}       yolo --explain <command>  Show plain-English diff after fix")
-        print(f"{Fore.YELLOW}       yolo --watch <command>   Auto-fix on every file change")
-        print(f"{Fore.YELLOW}       yolo --scan              Scan project for secrets & credentials")
-        print(f"{Fore.YELLOW}       yolo --rollback          Undo changes from the last run")
-        print(f"{Fore.YELLOW}       yolo --history           Browse past sessions")
+        print(f"{Fore.YELLOW}Usage: yoco <command>")
+        print(f"{Fore.YELLOW}       yoco --explain <command>  Show plain-English diff after fix")
+        print(f"{Fore.YELLOW}       yoco --watch <command>   Auto-fix on every file change")
+        print(f"{Fore.YELLOW}       yoco --scan              Scan project for secrets & credentials")
+        print(f"{Fore.YELLOW}       yoco --rollback          Undo changes from the last run")
+        print(f"{Fore.YELLOW}       yoco --history           Browse past sessions")
+        print(f"{Fore.YELLOW}       yoco --reset-tests       Restore all test files to original state")
+        print(f"{Fore.YELLOW}       yoco --clear-memory      Wipe the fix memory cache")
         sys.exit(0)
 
     # ---- HISTORY MODE ----
@@ -196,6 +197,51 @@ def main():
             print(_history.render_detail(entries[int(choice) - 1]))
         sys.exit(0)
     # -----------------------------------------------
+
+    # ---- RESET-TESTS MODE ----
+    if "--reset-tests" in raw_args:
+        import shutil
+        import pathlib
+        root      = pathlib.Path(__file__).parent
+        originals = root / "tests" / "originals"
+        targets   = root / "tests" / "test_files"
+        if not originals.exists():
+            print(f"{Fore.RED}  No originals directory found at {originals}")
+            sys.exit(1)
+        restored = 0
+        for src in originals.rglob("*"):
+            if src.is_file():
+                rel  = src.relative_to(originals)
+                dest = targets / rel
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(src, dest)
+                print(f"  {Fore.GREEN}✓{Style.RESET_ALL}  {rel}")
+                restored += 1
+        print(f"\n{Fore.GREEN}{restored} file(s) restored.{Style.RESET_ALL}")
+        sys.exit(0)
+    # ---------------------------
+
+    # ---- CLEAR-MEMORY MODE ----
+    if "--clear-memory" in raw_args:
+        import os as _os
+        mem_file = _os.path.expanduser("~/.yolo/fix_memory.jsonl")
+        if not _os.path.exists(mem_file):
+            print(f"{Fore.YELLOW}  Fix memory is already empty.")
+            sys.exit(0)
+        count = sum(1 for _ in open(mem_file))
+        print(f"{Fore.YELLOW}  This will delete {count} remembered fix(es).")
+        try:
+            choice = input(f"{Fore.YELLOW}  Are you sure? [Y/n]: {Style.RESET_ALL}").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            sys.exit(0)
+        if choice in ("y", "yes", ""):
+            _os.remove(mem_file)
+            print(f"{Fore.GREEN}  ✓ Fix memory cleared.")
+        else:
+            print(f"{Fore.YELLOW}  Aborted.")
+        sys.exit(0)
+    # ---------------------------
 
     # ---- SCAN MODE: standalone security audit ----
     if "--scan" in raw_args:
@@ -235,7 +281,7 @@ def main():
 
     args = [a for a in raw_args if a != "--dry-run"]
     if not args:
-        print(f"{Fore.YELLOW}Usage: yolo [--provider ollama|lmstudio|llamacpp]")
+        print(f"{Fore.YELLOW}Usage: yoco [--provider ollama|lmstudio|llamacpp]")
         print(f"{Fore.YELLOW}            [--host <ip>] [--port <port>] [--model <name>]")
         print(f"{Fore.YELLOW}            [--dry-run] [--rollback] <command>")
         sys.exit(0)
@@ -352,19 +398,25 @@ def main():
             confidence = "0%   (We Tried. We Really Did.)"
             conf_color = _RD
 
-        INNER = 50  # visible characters between the two │ borders
+        # INNER = visible columns between │ borders.
+        # Longest row: 2 (indent) + 20 (label) + 1 (space) + len(longest_value)
+        # Longest value: "0%   (We Tried. We Really Did.)" = 31 chars
+        # → min needed = 54; add 4 cols right padding → 58
+        INNER = 58
+        LABEL_W = 20   # fixed label column width
 
         def _row(label: str, value: str, val_color: str = _W) -> None:
-            # visible content: "  {label:<19} {value}"
-            prefix = f"  {label:<19} "
-            visible = prefix + value
-            pad = " " * max(0, INNER - len(visible))
+            prefix = f"  {label:<{LABEL_W}} "          # 2 + LABEL_W + 1 = 23 chars
+            content_len = len(prefix) + len(value)
+            pad = " " * max(0, INNER - content_len)
             print(f"{_C}│{_R}{_DIM}{prefix}{_R}{val_color}{value}{_R}{pad}{_C}│{_R}")
 
-        title = "🧠  YOLO CODER SUMMARY"
-        # 🧠 is 2 wide visually, but Python counts it as 1 char → pad manually
-        title_pad = (INNER - len(title) - 1) // 2
-        title_line = " " * title_pad + title + " " * (INNER - len(title) - title_pad)
+        # Title: 🧠 is 2 visual cols but len()=1 → subtract 1 from right padding
+        title     = "🧠  YOLO CODER SUMMARY"
+        t_len     = len(title) + 1          # +1 corrects for emoji double-width
+        t_left    = (INNER - t_len) // 2
+        t_right   = INNER - t_len - t_left
+        title_line = " " * t_left + title + " " * t_right
 
         print(f"\n{_C}┌{'─' * INNER}┐{_R}")
         print(f"{_C}│{_R}{title_line}{_C}│{_R}")

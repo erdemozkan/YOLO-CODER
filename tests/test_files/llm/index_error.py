@@ -4,4 +4,4 @@
 # Expected fix: bounds check or correct index.
 
 items = ["apple", "banana"]
-print("Third item:", items[1] if len(items) > 1 else None)
+print("Third item:", items[2])
