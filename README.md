@@ -11,7 +11,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
   <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.10%2B-blue.svg" alt="Python 3.10+" /></a>
-  <a href="https://ollama.ai"><img src="https://img.shields.io/badge/Powered%20by-Ollama-black.svg" alt="Ollama" /></a>
+  <a href="https://ollama.com"><img src="https://img.shields.io/badge/Powered%20by-Ollama-black.svg" alt="Ollama" /></a>
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
   <img src="https://img.shields.io/badge/privacy-100%25%20local-green.svg" alt="100% Local" />
 </p>
@@ -120,7 +120,7 @@ pip install -e .
 
 ### 2. Install Ollama
 
-Download from [ollama.ai](https://ollama.ai) or:
+Download from [ollama.com](https://ollama.com) or:
 
 ```bash
 brew install ollama
@@ -291,14 +291,80 @@ yoco --history 5
 
 ## Configuration
 
+YOCO supports **Ollama**, **LM Studio**, and **llama.cpp** out of the box. Config is layered — CLI flags override the saved file, which overrides built-in defaults.
+
+### Config file
+
 ```json
 // ~/.yolo/config.json
 {
-  "model": "yolo-coder",
-  "endpoint": "http://localhost:11434/v1",
+  "provider": "ollama",
+  "host": "localhost",
+  "port": 11434,
+  "model": "hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder",
   "max_attempts": 3,
   "dry_run": false
 }
+```
+
+### Per-run CLI overrides
+
+```bash
+# Switch provider for one run
+yoco --provider lmstudio python3 myapp.py
+
+# Custom host or port (e.g. Ollama on a remote machine or non-default port)
+yoco --host 192.168.1.50 --port 11434 python3 myapp.py
+
+# Override model for one run
+yoco --model yolo-7b python3 myapp.py
+```
+
+### Provider defaults
+
+| Provider | Default port | Notes |
+|---|---|---|
+| `ollama` | `11434` | `ollama serve` — recommended |
+| `lmstudio` | `1234` | Enable "Local Server" in the LM Studio UI |
+| `llamacpp` | `8080` | `./server -m model.gguf --port 8080` |
+
+### Setting up each provider
+
+**Ollama (recommended)**
+```bash
+ollama serve                                        # start the server
+ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder  # pull + verify model
+echo '{"provider": "ollama", "model": "hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder"}' > ~/.yolo/config.json
+```
+
+**LM Studio**
+```bash
+# 1. Open LM Studio → Model tab → load any GGUF model
+# 2. Go to Local Server tab → Start Server (enable CORS)
+# 3. Tell YOCO to use it:
+echo '{"provider": "lmstudio"}' > ~/.yolo/config.json
+# LM Studio uses whatever model is currently loaded — no model name needed
+```
+
+**llama.cpp server**
+```bash
+./server -m YOLO-7B-Qwen-q4.gguf --port 8080      # start the server
+echo '{"provider": "llamacpp", "port": 8080}' > ~/.yolo/config.json
+```
+
+**Custom port or remote host**
+```bash
+# Ollama running on a non-default port
+echo '{"provider": "ollama", "host": "localhost", "port": 12345}' > ~/.yolo/config.json
+
+# Ollama on a remote machine on your local network
+echo '{"provider": "ollama", "host": "192.168.1.50", "port": 11434}' > ~/.yolo/config.json
+```
+
+### Check active config
+
+```bash
+yoco --config
 ```
 
 ---
@@ -316,18 +382,31 @@ The design priorities, in order:
 3. **Locality** — 100% local inference, no data leaves your machine
 4. **Simplicity** — one command, wraps whatever you were already running
 
+Oh, and while it works, it'll throw out a random quip — "YOLOing..", "Crying..", "Day dreaming.." — just for fun 😄
+
 ---
 
 ## Roadmap
 
 See [FUTURE_FEATURES.md](FUTURE_FEATURES.md) for deferred ideas with architectural reasoning.
 
+Completed:
+- [x] `--explain` mode — plain-English diff after every fix
+- [x] `--watch` mode — re-runs on every file save
+- [x] `--rollback` — interactive undo picker
+- [x] `--dry-run` — preview fix without applying
+- [x] Fix memory — instant replay of past fixes
+- [x] Security gate — blocks git push when secrets are detected
+- [x] First-run disclaimer with local acceptance record
+
 Near-term:
 - [ ] Rust / cargo error interceptors
 - [ ] Shell script error interceptors (bash -e failures)
 - [ ] VS Code extension (show fix inline before applying)
-- [ ] `--explain` deep-dive improvements
 - [ ] CI mode (non-interactive, exits 0 on fix, 1 on failure)
+- [ ] `pip install yoco` — publish to PyPI for global install
+- [ ] Lean terminal UI — interactive dashboard while YOCO works
+- [ ] YOCO Web — browser-based interface similar to Claude Code
 
 ---
 

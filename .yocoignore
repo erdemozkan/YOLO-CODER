@@ -6,7 +6,7 @@
 
 # Test fixtures — intentional fake keys
 tests/test_files/fake_api.py
-tests/test_files_original/fake_api.py
+tests/originals/fake_api.py
 
 # Old backup — low risk placeholder keys only
 YOLO-MODEL-FILES/yolo.py.bak

@@ -32,7 +32,7 @@ core/
   memory.py              ← fix memory: fingerprint errors, cache successful fixes
   snapshot.py            ← file snapshots before any change, rollback support
   history.py             ← append-only run log (~/.yolo/history.jsonl)
-  config.py              ← loads critical_config.json + ~/.yolo/config.json
+  config.py              ← loads ~/.yolo/config.json (provider, host, port, model)
   schema.py              ← FixResult dataclass (the unit of work between layers)
   diff.py                ← shows what changed after a fix
   explain.py             ← deep-dive AI explanation of errors (--explain)

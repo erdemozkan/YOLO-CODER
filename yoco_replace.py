@@ -40,7 +40,7 @@ def replace_line(filepath, line_number, new_text):
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print("Usage: python3 yolo_replace.py <filepath> <line_number> <new_string>")
+        print("Usage: python3 yoco_replace.py <filepath> <line_number> <new_string>")
         sys.exit(1)
         
     replace_line(sys.argv[1], sys.argv[2], sys.argv[3])

@@ -4,5 +4,6 @@ __pycache__/
 *$py.class
 .env
 YOLO-MODEL-FILES/
+demos/
 .DS_Store
 *.egg-info/
