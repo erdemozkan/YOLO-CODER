@@ -16,6 +16,7 @@ from core.project import detect_project
 from core.snapshot import rollback_all, rollback_from_disk, rollback_file, list_session_files, clear_snapshots, set_command, modified_files
 import core.history as _history
 from skills import SKILL_REGISTRY
+from core.disclaimer import check_accepted
 
 # --- INIT COLORAMA ---
 init(autoreset=True)
@@ -159,6 +160,7 @@ def print_banner():
 
 def main():
     print_banner()
+    check_accepted()
     if len(sys.argv) < 2:
         print(f"{Fore.YELLOW}Usage: yoco <command>")
         print(f"{Fore.YELLOW}       yoco --explain <command>  Show plain-English diff after fix")

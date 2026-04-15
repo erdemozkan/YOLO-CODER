@@ -16,6 +16,9 @@
   <img src="https://img.shields.io/badge/privacy-100%25%20local-green.svg" alt="100% Local" />
 </p>
 
+> [!CAUTION]
+> **Disclaimer:** YOCO is experimental and can modify/delete files. Use it in isolated environments like Docker. See [DISCLAIMER.md](DISCLAIMER.md) for full details.
+
 ---
 
 ## The pitch
@@ -34,7 +37,40 @@ That's it. That's the whole interface.
 
 ## Demo
 
-> *Recording coming soon — see [demos/](demos/) for the scripts*
+### Brain 1 — Interceptor: missing package fixed in under a second
+<p align="center">
+  <img src="assets/01_basic_fix.gif" alt="YOCO fixes a missing package instantly" width="800" />
+</p>
+
+### Brain 3 — Local LLM: patches a logic bug in your code
+<p align="center">
+  <img src="assets/02_llm_fix.gif" alt="YOCO uses local LLM to fix a ZeroDivisionError" width="800" />
+</p>
+
+### Brain 2 — Fix Memory: same error, instant replay
+<p align="center">
+  <img src="assets/03_memory_hit.gif" alt="YOCO recalls a past fix and applies it instantly" width="800" />
+</p>
+
+### Rollback: undo everything YOCO changed
+<p align="center">
+  <img src="assets/04_rollback.gif" alt="YOCO interactive rollback picker" width="800" />
+</p>
+
+### Dry Run: preview the fix before applying it
+<p align="center">
+  <img src="assets/05_dry_run.gif" alt="YOCO dry run mode" width="800" />
+</p>
+
+### Security Gate: blocks git push when an API key is exposed
+<p align="center">
+  <img src="assets/06_security.gif" alt="YOCO blocks git push due to exposed OpenAI API key" width="800" />
+</p>
+
+### Watch Mode: auto-fixes on every file save
+<p align="center">
+  <img src="assets/07_watch.gif" alt="YOCO watch mode fixes two bugs automatically as files change" width="800" />
+</p>
 
 ---
 

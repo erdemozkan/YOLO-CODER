@@ -54,10 +54,10 @@ def _changed(old: dict, new: dict) -> list[str]:
     return changed
 
 
-def _run_yolo(cmd_tokens: list[str], root: Path) -> int:
+def _run_yolo(cmd_tokens: list[str], root: Path, cwd: Path) -> int:
     """Run `python3 yoco.py <cmd>` and stream output. Returns exit code."""
     full_cmd = [sys.executable, str(root / "yoco.py")] + cmd_tokens
-    proc = subprocess.Popen(full_cmd, cwd=str(root))
+    proc = subprocess.Popen(full_cmd, cwd=str(cwd))
     try:
         proc.wait()
     except KeyboardInterrupt:
@@ -66,26 +66,17 @@ def _run_yolo(cmd_tokens: list[str], root: Path) -> int:
     return proc.returncode
 
 
-def _confirm(cmd: str, root: Path) -> bool:
-    """Explain watch mode and ask for Y/N confirmation."""
-    exts = ", ".join(sorted(WATCH_EXTENSIONS))
+def _banner(cmd: str, root: Path) -> None:
+    """Print watch mode startup banner."""
     print(f"\n{OR}{'─'*58}{RST}")
-    print(f"{OR}  ⚡  {BOLD}WATCH MODE{RST}")
+    print(f"{OR}  ⚡  {BOLD}WATCH MODE{RST}  {DIM}(Ctrl+C to stop){RST}")
     print(f"{OR}{'─'*58}{RST}")
     print(f"  {DIM}Project  :{RST}  {root}")
     print(f"  {DIM}Command  :{RST}  {YL}{cmd}{RST}")
-    print(f"  {DIM}Watching :{RST}  {DIM}{exts}{RST}")
     print(f"  {DIM}Interval :{RST}  {POLL_INTERVAL}s")
     print(f"\n  On any file change → re-runs the command.")
     print(f"  On failure → YOLO auto-fixes and retries.")
-    print(f"  Press {BOLD}Ctrl+C{RST} at any time to stop.\n")
     print(f"{OR}{'─'*58}{RST}")
-    try:
-        ans = input(f"\n  Continue? {BOLD}[y/N]{RST} ").strip().lower()
-    except (KeyboardInterrupt, EOFError):
-        print()
-        return False
-    return ans in ("y", "yes")
 
 
 def main():
@@ -96,16 +87,14 @@ def main():
     cmd_tokens = sys.argv[1:]
     cmd_str    = " ".join(cmd_tokens)
     root       = Path(__file__).parent.parent.resolve()
+    cwd        = Path.cwd()
 
-    if not _confirm(cmd_str, root):
-        print(f"\n  {DIM}Watch mode cancelled.{RST}\n")
-        sys.exit(0)
-
-    print(f"\n{GR}  ✔  Watch mode started.{RST}  {DIM}(Ctrl+C to stop){RST}\n")
+    _banner(cmd_str, root)
+    print(f"\n{GR}  ✔  Watch mode started.{RST}\n")
 
     # Initial run
     print(f"{OR}  ⚡  {DIM}Running initial check…{RST}\n")
-    _run_yolo(cmd_tokens, root)
+    _run_yolo(cmd_tokens, root, cwd)
 
     # Seed the file snapshot after the initial run
     snapshot = _scan(root)
@@ -123,7 +112,7 @@ def main():
                 rel = [os.path.relpath(f, root) for f in changed]
                 print(f"\n{YL}  ✦  Change detected:{RST}  {DIM}{', '.join(rel)}{RST}")
                 print(f"{OR}  ⚡  Re-running…{RST}\n")
-                _run_yolo(cmd_tokens, root)
+                _run_yolo(cmd_tokens, root, cwd)
                 print(f"\n{CY}  👁  Watching for changes…{RST}  {DIM}{cmd_str}{RST}\n")
                 # Re-seed after YOLO may have modified files
                 snapshot = _scan(root)
