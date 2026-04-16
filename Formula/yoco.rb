@@ -1,10 +1,3 @@
-# ⚠️  WORK IN PROGRESS — NOT READY FOR USE
-#
-# This Homebrew formula is incomplete and will NOT install correctly.
-# SHA256 checksums can only be generated after a versioned GitHub release
-# tarball exists. See instructions at the bottom of this file.
-#
-# Current status: placeholder — do not submit to homebrew-core or share publicly.
 
 class Yoco < Formula
   include Language::Python::Virtualenv
@@ -12,32 +5,30 @@ class Yoco < Formula
   desc "AI agent that fixes your broken CLI commands automatically using a local LLM"
   homepage "https://github.com/erdemozkan/YOLO-CODER"
 
-  # TODO: update URL and fill sha256 after publishing a GitHub release tag
-  url "https://github.com/erdemozkan/YOLO-CODER/archive/refs/tags/v0.0.2.tar.gz"
-  sha256 "FILL_IN_AFTER_RELEASE"
+  url "https://github.com/erdemozkan/YOLO-CODER/archive/refs/tags/v0.02.tar.gz"
+  sha256 "9ed4814f7744dfc2d38514e65eac2a08d8cafc54a4a0e217fd48cf2db0a5249c"
   license "MIT"
 
   depends_on "python@3.12"
 
-  # TODO: fill sha256 for each resource (see instructions below)
   resource "openai" do
     url "https://files.pythonhosted.org/packages/source/o/openai/openai-1.30.1.tar.gz"
-    sha256 "FILL_IN"
+    sha256 "4f85190e577cba0b066e1950b8eb9b11d25bc7ebcc43a86b326ce1bfa564ec74"
   end
 
   resource "colorama" do
-    url "https://files.pythonhosted.org/packages/source/c/colorama/colorama-0.4.6.tar.gz"
-    sha256 "08695f5cb7ed6e0531a20572697297d53cf2f73cfcded5dc2fffb8e8e4ce0ef0"
+    url "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz"
+    sha256 "08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"
   end
 
   resource "rich" do
     url "https://files.pythonhosted.org/packages/source/r/rich/rich-13.7.1.tar.gz"
-    sha256 "FILL_IN"
+    sha256 "9be308cb1fe2f1f57d67ce99e95af38a1e2bc71ad9813b0e247cf7ffbcc3a432"
   end
 
   resource "python-dotenv" do
-    url "https://files.pythonhosted.org/packages/source/p/python-dotenv/python_dotenv-1.0.1.tar.gz"
-    sha256 "FILL_IN"
+    url "https://files.pythonhosted.org/packages/bc/57/e84d88dfe0aec03b7a2d4327012c1627ab5f03652216c63d49846d7a6c58/python-dotenv-1.0.1.tar.gz"
+    sha256 "e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca"
   end
 
   def install

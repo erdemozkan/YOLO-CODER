@@ -110,7 +110,13 @@ Fix fails → roll back every file to its pre-YOLO state, try again.
 
 ## Install
 
-### 1. Clone and install YOCO
+### 1. Install YOCO
+
+```bash
+pip install yolo-coder
+```
+
+Or install from source:
 
 ```bash
 git clone https://github.com/erdemozkan/YOLO-CODER
@@ -404,7 +410,7 @@ Near-term:
 - [ ] Shell script error interceptors (bash -e failures)
 - [ ] VS Code extension (show fix inline before applying)
 - [ ] CI mode (non-interactive, exits 0 on fix, 1 on failure)
-- [ ] `pip install yoco` — publish to PyPI for global install
+- [x] `pip install yolo-coder` — published to PyPI
 - [ ] Lean terminal UI — interactive dashboard while YOCO works
 - [ ] YOCO Web — browser-based interface similar to Claude Code
 
