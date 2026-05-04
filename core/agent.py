@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from openai import OpenAI
 from core.config import ModelConfig
-from core.project import ProjectContext, flat_file_list
+from core.project import ProjectContext  # flat_file_list unused (old_working prompt)
 from core.schema import FixResult
 
 # Multi-file context limits — keep prompts from ballooning
@@ -117,51 +117,59 @@ def _derive_context(error_msg: str) -> tuple[str, str]:
 
 
 def _build_system_prompt(ctx: ProjectContext) -> str:
-    """Compose a context-aware system prompt from the detected project environment."""
-    files = flat_file_list(ctx.repo_structure)
-    repo_json = ", ".join(f'"{f}"' for f in files[:60])  # cap at 60 entries
-    if len(files) > 60:
-        repo_json += f', ... ({len(files) - 60} more)'
-
-    env_block = (
-        f"OS: {ctx.os_name} {ctx.os_version} ({ctx.arch}) | "
-        f"Shell: {ctx.shell} | "
-        f"Python: {ctx.python_version}"
-        + (f" | Node: {ctx.node_version}" if ctx.node_version else "")
-    )
-
-    project_block = (
-        f"Project type: {ctx.type} | "
-        f"Package manager: {ctx.package_manager} | "
-        f"Test runner: {ctx.test_runner}"
-    )
-
-    deps_block = ""
-    if ctx.declared_deps:
-        deps_block = f"\nDeclared deps: {', '.join(ctx.declared_deps[:30])}"
-        if len(ctx.declared_deps) > 30:
-            deps_block += f" ... ({len(ctx.declared_deps) - 30} more)"
-
+    """Compose system prompt aligned with training data format."""
     return (
         "You are a CLI repair tool. "
         "Output ONLY a single bare bash command to fix the error. "
-        "No explanation. No markdown. No backticks. No multi-line output.\n\n"
-        "To fix a Python source file, use the yoco_replace tool:\n"
-        "  python3 yoco_replace.py <filepath> <line_number> <new_line_content>\n"
-        "Example: python3 yoco_replace.py src/app.py 7 '    return a / b if b != 0 else 0'\n"
-        "The line number comes from the traceback. The new content replaces that exact line.\n\n"
-        "RULES for the replacement line:\n"
-        "- Must be valid Python on a SINGLE line.\n"
-        "- Use ternary expressions: `x if cond else y` — NOT `if cond: x else: y`.\n"
-        "- Use `or` guards: `(val or '').strip()` — NOT multi-statement if/else.\n"
-        "- Preserve the original indentation exactly.\n\n"
-        "For missing packages:  pip install <package>\n"
-        "For missing dirs:      mkdir -p <path>\n"
-        "For permissions:       chmod +x <file>\n\n"
-        f"Environment: {env_block}\n"
-        f"Project: {project_block}{deps_block}\n"
-        f"Repo files: [{repo_json}]"
+        "No explanation. No markdown. No backticks."
     )
+
+
+# ── old_working: rich context-aware system prompt (disabled) ──────────────────
+# def _build_system_prompt_old(ctx: ProjectContext) -> str:
+#     files = flat_file_list(ctx.repo_structure)
+#     repo_json = ", ".join(f'"{f}"' for f in files[:60])
+#     if len(files) > 60:
+#         repo_json += f', ... ({len(files) - 60} more)'
+#
+#     env_block = (
+#         f"OS: {ctx.os_name} {ctx.os_version} ({ctx.arch}) | "
+#         f"Shell: {ctx.shell} | "
+#         f"Python: {ctx.python_version}"
+#         + (f" | Node: {ctx.node_version}" if ctx.node_version else "")
+#     )
+#     project_block = (
+#         f"Project type: {ctx.type} | "
+#         f"Package manager: {ctx.package_manager} | "
+#         f"Test runner: {ctx.test_runner}"
+#     )
+#     deps_block = ""
+#     if ctx.declared_deps:
+#         deps_block = f"\nDeclared deps: {', '.join(ctx.declared_deps[:30])}"
+#         if len(ctx.declared_deps) > 30:
+#             deps_block += f" ... ({len(ctx.declared_deps) - 30} more)"
+#
+#     return (
+#         "You are a CLI repair tool. "
+#         "Output ONLY a single bare bash command to fix the error. "
+#         "No explanation. No markdown. No backticks. No multi-line output.\n\n"
+#         "To fix a Python source file, use the yoco_replace tool:\n"
+#         "  python3 yoco_replace.py <filepath> <line_number> <new_line_content>\n"
+#         "Example: python3 yoco_replace.py src/app.py 7 '    return a / b if b != 0 else 0'\n"
+#         "The line number comes from the traceback. The new content replaces that exact line.\n\n"
+#         "RULES for the replacement line:\n"
+#         "- Must be valid Python on a SINGLE line.\n"
+#         "- Use ternary expressions: `x if cond else y` — NOT `if cond: x else: y`.\n"
+#         "- Use `or` guards: `(val or '').strip()` — NOT multi-statement if/else.\n"
+#         "- Preserve the original indentation exactly.\n\n"
+#         "For missing packages:  pip install <package>\n"
+#         "For missing dirs:      mkdir -p <path>\n"
+#         "For permissions:       chmod +x <file>\n\n"
+#         f"Environment: {env_block}\n"
+#         f"Project: {project_block}{deps_block}\n"
+#         f"Repo files: [{repo_json}]"
+#     )
+# ── end old_working ───────────────────────────────────────────────────────────
 
 
 class YoloAgent:
@@ -174,9 +182,10 @@ class YoloAgent:
     def ask(
         self,
         user_cmd: str,
-        exit_code: int,
+        exit_code: int,  # kept for API compat; not used in prompt (old_working used it)
         error_msg: str,
         history: list[tuple[str, str]] | None = None,
+        attempt: int = 1,
     ) -> FixResult:
         """
         Returns a FixResult.
@@ -187,6 +196,10 @@ class YoloAgent:
                  Injected as a compact text block so the model avoids repeating
                  commands that already failed. Kept in single-message format to
                  match the fine-tuning data — no multi-turn chat.
+
+        attempt: 1-based retry count. Temperature scales up on retries to force
+                 the model to sample differently rather than repeating the same fix.
+                 attempt 1 → 0.1, attempt 2 → 0.4, attempt 3 → 0.8
         """
         summary, plan = _derive_context(error_msg)
 
@@ -224,14 +237,28 @@ class YoloAgent:
             except OSError:
                 pass
 
+        os_tag = "macOS" if "darwin" in self.ctx.os_name.lower() else "Linux"
         user_prompt = (
-            f"Command: {user_cmd}\n"
-            f"Exit Code: {exit_code}\n"
-            f"Error: {error_msg}"
-            f"{file_block}"
+            f"[{os_tag}] $ {user_cmd}\n"
+            f"Error:\n{error_msg}"
             f"{prior_block}\n"
             f"FIX:"
         )
+
+        # ── old_working: richer user prompt with exit code and file content ───
+        # user_prompt = (
+        #     f"Command: {user_cmd}\n"
+        #     f"Exit Code: {exit_code}\n"
+        #     f"Error: {error_msg}"
+        #     f"{file_block}"
+        #     f"{prior_block}\n"
+        #     f"FIX:"
+        # )
+        # ── end old_working ───────────────────────────────────────────────────
+
+        # Scale temperature up on retries so the model samples differently
+        # rather than deterministically repeating the same failed fix.
+        temperature = {1: 0.1, 2: 0.4}.get(attempt, 0.8)
 
         try:
             response = self.client.chat.completions.create(
@@ -240,7 +267,7 @@ class YoloAgent:
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user",   "content": user_prompt},
                 ],
-                temperature=0.1,
+                temperature=temperature,
             )
 
             raw = response.choices[0].message.content.strip()

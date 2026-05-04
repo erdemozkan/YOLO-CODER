@@ -1,0 +1,2728 @@
+{
+  "meta": {
+    "provider": "ollama",
+    "model": "yolo-coder",
+    "timestamp": "20260417_153358",
+    "total_examples": 218,
+    "filters": {
+      "category": null,
+      "verified_only": true
+    }
+  },
+  "summary": {
+    "total_examples": 218,
+    "exact_match_pct": 24.3,
+    "normalized_match_pct": 24.3,
+    "avg_token_f1": 0.525,
+    "by_category": {
+      "python": {
+        "exact_match": 75.6,
+        "normalized_match": 75.6,
+        "avg_token_f1": 0.845,
+        "count": 41
+      },
+      "pip": {
+        "exact_match": 0.0,
+        "normalized_match": 0.0,
+        "avg_token_f1": 0.51,
+        "count": 15
+      },
+      "nodejs": {
+        "exact_match": 57.1,
+        "normalized_match": 57.1,
+        "avg_token_f1": 0.713,
+        "count": 14
+      },
+      "npm": {
+        "exact_match": 0.0,
+        "normalized_match": 0.0,
+        "avg_token_f1": 0.41,
+        "count": 15
+      },
+      "typescript": {
+        "exact_match": 8.3,
+        "normalized_match": 8.3,
+        "avg_token_f1": 0.491,
+        "count": 12
+      },
+      "docker": {
+        "exact_match": 10.5,
+        "normalized_match": 10.5,
+        "avg_token_f1": 0.402,
+        "count": 19
+      },
+      "git": {
+        "exact_match": 16.0,
+        "normalized_match": 16.0,
+        "avg_token_f1": 0.507,
+        "count": 25
+      },
+      "shell": {
+        "exact_match": 5.0,
+        "normalized_match": 5.0,
+        "avg_token_f1": 0.352,
+        "count": 20
+      },
+      "cargo": {
+        "exact_match": 23.1,
+        "normalized_match": 23.1,
+        "avg_token_f1": 0.52,
+        "count": 13
+      },
+      "ssh": {
+        "exact_match": 11.1,
+        "normalized_match": 11.1,
+        "avg_token_f1": 0.448,
+        "count": 9
+      },
+      "database": {
+        "exact_match": 0.0,
+        "normalized_match": 0.0,
+        "avg_token_f1": 0.302,
+        "count": 10
+      },
+      "make": {
+        "exact_match": 0.0,
+        "normalized_match": 0.0,
+        "avg_token_f1": 0.178,
+        "count": 5
+      },
+      "venv": {
+        "exact_match": 0.0,
+        "normalized_match": 0.0,
+        "avg_token_f1": 0.307,
+        "count": 10
+      },
+      "cloud": {
+        "exact_match": 16.7,
+        "normalized_match": 16.7,
+        "avg_token_f1": 0.492,
+        "count": 6
+      },
+      "yarn": {
+        "exact_match": 25.0,
+        "normalized_match": 25.0,
+        "avg_token_f1": 0.519,
+        "count": 4
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "py_001",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'flask'",
+      "expected": "pip install flask",
+      "predicted": "pip install flask",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_002",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'bs4'",
+      "expected": "pip install beautifulsoup4",
+      "predicted": "pip install beautifulsoup4",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_003",
+      "category": "python",
+      "error": "PermissionError: [Errno 13] Permission denied: '/var/log/app.log'",
+      "expected": "sudo python3 write_log.py",
+      "predicted": "sudo chown appuser:appgroup /var/log/app.log",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.286
+      }
+    },
+    {
+      "id": "py_005",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'typing_extensions'",
+      "expected": "pip install typing-extensions",
+      "predicted": "pip install typing-extensions",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_006",
+      "category": "python",
+      "error": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0",
+      "expected": "pip install chardet",
+      "predicted": "export LC_ALL=C.UTF-8",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "py_007",
+      "category": "python",
+      "error": "pip: error: SSL: CERTIFICATE_VERIFY_FAILED certificate verify failed",
+      "expected": "pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org numpy",
+      "predicted": "pip install --trusted-host pypi.python.org -r requirements.txt",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "py_008",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'sklearn'",
+      "expected": "pip install scikit-learn",
+      "predicted": "pip install scikit-learn",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_009",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'cv2'",
+      "expected": "pip install opencv-python",
+      "predicted": "pip install opencv-python",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_010",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'dotenv'",
+      "expected": "pip install python-dotenv",
+      "predicted": "pip install python-dotenv",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "pip_001",
+      "category": "pip",
+      "error": "error: externally-managed-environment\n\u00d7 This environment is externally managed",
+      "expected": "pip install numpy --break-system-packages",
+      "predicted": "git config --global credential.helper store",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "pip_002",
+      "category": "pip",
+      "error": "ERROR: Could not install packages due to an OSError: [Errno 13] Permission denied: '/usr/local/lib/python3.11'",
+      "expected": "pip install flask --user",
+      "predicted": "pip install --user <package_name>",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.75
+      }
+    },
+    {
+      "id": "pip_003",
+      "category": "pip",
+      "error": "ERROR: Could not find a version that satisfies the requirement scikit_learn",
+      "expected": "pip install scikit-learn",
+      "predicted": "pip install --upgrade pip setuptools wheel && pip install scikit-learn",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.6
+      }
+    },
+    {
+      "id": "pip_004",
+      "category": "pip",
+      "error": "ERROR: pip's dependency resolver does not currently take into account all the packages that are installed",
+      "expected": "pip install tensorflow==2.12 --upgrade",
+      "predicted": "pip install --upgrade pip setuptools wheel",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "pip_005",
+      "category": "pip",
+      "error": "ERROR: THESE PACKAGES DO NOT MATCH THE HASHES FROM THE REQUIREMENTS FILE",
+      "expected": "pip install -r requirements.txt --no-deps",
+      "predicted": "pip install --no-cache-dir -r requirements.txt",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.8
+      }
+    },
+    {
+      "id": "node_001",
+      "category": "nodejs",
+      "error": "Error: Cannot find module 'express'\nRequire stack:\n- /app/server.js",
+      "expected": "npm install express",
+      "predicted": "npm install express",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "node_002",
+      "category": "nodejs",
+      "error": "Error: Cannot find module 'dotenv'",
+      "expected": "npm install dotenv",
+      "predicted": "npm install dotenv",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "node_004",
+      "category": "nodejs",
+      "error": "SyntaxError: Unexpected token '?'",
+      "expected": "nvm use 16",
+      "predicted": "grep -E '^(if|while)\\s*\\?'",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "npm_001",
+      "category": "npm",
+      "error": "npm ERR! Missing script: \"dev\"\nnpm ERR! Did you mean one of these?\nnpm ERR!   npm run start",
+      "expected": "npm run start",
+      "predicted": "npm set-script dev \"node server.js\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.25
+      }
+    },
+    {
+      "id": "npm_002",
+      "category": "npm",
+      "error": "npm ERR! code EACCES\nnpm ERR! syscall mkdir\nnpm ERR! path /usr/local/lib/node_modules",
+      "expected": "sudo npm install -g typescript",
+      "predicted": "sudo npm install -g npm",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.889
+      }
+    },
+    {
+      "id": "npm_003",
+      "category": "npm",
+      "error": "npm ERR! code ERESOLVE\nnpm ERR! ERESOLVE unable to resolve dependency tree",
+      "expected": "npm install react-scripts --legacy-peer-deps",
+      "predicted": "npm install --force",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "npm_004",
+      "category": "npm",
+      "error": "npm ERR! code ENOENT\nnpm ERR! syscall open\nnpm ERR! path /app/package.json",
+      "expected": "npm init -y",
+      "predicted": "npm install -g npm@latest",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.286
+      }
+    },
+    {
+      "id": "npm_005",
+      "category": "npm",
+      "error": "npm ERR! Invalid: lock file's lodash@4.17.21 does not satisfy lodash@^3.0.0",
+      "expected": "npm install --legacy-peer-deps",
+      "predicted": "rm package-lock.json && npm install",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "ts_001",
+      "category": "typescript",
+      "error": "error TS2304: Cannot find name 'Promise'",
+      "expected": "npm install --save-dev @types/node",
+      "predicted": "npm install --save-dev typescript ts-node-dev",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "ts_002",
+      "category": "typescript",
+      "error": "error TS2339: Property 'env' does not exist on type 'typeof process'",
+      "expected": "npm install --save-dev @types/node",
+      "predicted": "import { env } from 'process';",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "ts_003",
+      "category": "typescript",
+      "error": "error TS2307: Cannot find module 'express' or its corresponding type declarations",
+      "expected": "npm install --save-dev @types/express",
+      "predicted": "npm install express --save",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "ts_004",
+      "category": "typescript",
+      "error": "error TS5023: Unknown compiler option 'moduleResolution'",
+      "expected": "npm install typescript@latest --save-dev",
+      "predicted": "npm install typescript --save-dev && npx tsc --init",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "docker_001",
+      "category": "docker",
+      "error": "Unable to find image 'myapp:latest' locally\ndocker: Error response from daemon: pull access denied",
+      "expected": "docker build -t myapp:latest .",
+      "predicted": "docker login",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.286
+      }
+    },
+    {
+      "id": "docker_002",
+      "category": "docker",
+      "error": "docker: Error response from daemon: driver failed programming external connectivity: Bind for 0.0.0.0:8080 failed: port is already allocated",
+      "expected": "docker run -p 8081:80 nginx",
+      "predicted": "sudo lsof -i :8080 | awk 'NR!=1 {print $2}' | xargs sudo kill -9",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "docker_003",
+      "category": "docker",
+      "error": "docker: Error response from daemon: Conflict. The container name \"/mycontainer\" is already in use",
+      "expected": "docker rm mycontainer && docker run --name mycontainer nginx",
+      "predicted": "docker rm -f mycontainer",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.545
+      }
+    },
+    {
+      "id": "docker_004",
+      "category": "docker",
+      "error": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?",
+      "expected": "sudo systemctl start docker",
+      "predicted": "sudo systemctl start docker",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "docker_005",
+      "category": "docker",
+      "error": "Error response from daemon: no space left on device",
+      "expected": "docker system prune -f",
+      "predicted": "docker system prune -a --volumes",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "docker_006",
+      "category": "docker",
+      "error": "ERROR: for web  Cannot create container for service web: Conflict. The container name \"/app_web_1\" is already in use",
+      "expected": "docker-compose down && docker-compose up",
+      "predicted": "docker stop $(docker ps -q --filter \"name=web\") && docker rm $(docker ps -aq --filter \"name=web\")",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.143
+      }
+    },
+    {
+      "id": "git_001",
+      "category": "git",
+      "error": "fatal: not a git repository (or any of the parent directories): .git",
+      "expected": "git init",
+      "predicted": "git init",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "git_002",
+      "category": "git",
+      "error": "error: failed to push some refs to 'origin'\nhint: Updates were rejected because the remote contains work that you do not have locally",
+      "expected": "git pull --rebase origin main && git push origin main",
+      "predicted": "git pull --rebase && git push",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.833
+      }
+    },
+    {
+      "id": "git_003",
+      "category": "git",
+      "error": "On branch main\nnothing to commit, working tree clean",
+      "expected": "git add . && git commit -m 'update'",
+      "predicted": "git add . && git commit -m \"Initial commit\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.8
+      }
+    },
+    {
+      "id": "git_004",
+      "category": "git",
+      "error": "HEAD detached at a1b2c3d",
+      "expected": "git checkout main",
+      "predicted": "git checkout main",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "git_005",
+      "category": "git",
+      "error": "CONFLICT (content): Merge conflict in src/app.py\nAutomatic merge failed; fix conflicts and then commit the result",
+      "expected": "git mergetool",
+      "predicted": "git mergetool",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "git_006",
+      "category": "git",
+      "error": "fatal: The current branch feature has no upstream branch.\nTo push the current branch and set the remote as upstream",
+      "expected": "git push --set-upstream origin feature",
+      "predicted": "git push --set-upstream origin feature",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "git_007",
+      "category": "git",
+      "error": "remote: error: File model.bin is 256.00 MB; this exceeds GitHub's file size limit of 100.00 MB",
+      "expected": "git rm --cached model.bin && echo 'model.bin' >> .gitignore && git commit -m 'remove large file'",
+      "predicted": "git filter-repo --path 'model.bin' --invert-paths",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.211
+      }
+    },
+    {
+      "id": "git_008",
+      "category": "git",
+      "error": "remote: Support for password authentication was removed on August 13, 2021.\nremote: Please see https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories",
+      "expected": "git remote set-url origin git@github.com:user/repo.git",
+      "predicted": "git config --global credential.helper store",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.2
+      }
+    },
+    {
+      "id": "shell_001",
+      "category": "shell",
+      "error": "command not found: python",
+      "expected": "python3 app.py",
+      "predicted": "export PATH=\"/usr/local/bin:$PATH\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "shell_002",
+      "category": "shell",
+      "error": "-bash: ./deploy.sh: Permission denied",
+      "expected": "chmod +x deploy.sh && ./deploy.sh",
+      "predicted": "chmod +x deploy.sh",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.75
+      }
+    },
+    {
+      "id": "shell_003",
+      "category": "shell",
+      "error": "make: command not found",
+      "expected": "brew install make",
+      "predicted": "export PATH=$PATH:/usr/local/bin",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "shell_004",
+      "category": "shell",
+      "error": "OSError: [Errno 98] Address already in use",
+      "expected": "lsof -ti:8000 | xargs kill -9 && python3 -m http.server 8000",
+      "predicted": "sudo lsof -i :<port_number> | awk 'NR!=1 {print $2}' | xargs kill -9",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.435
+      }
+    },
+    {
+      "id": "shell_005",
+      "category": "shell",
+      "error": "cp: error writing '/backup/large_file.tar.gz': No space left on device",
+      "expected": "df -h",
+      "predicted": "sudo apt autoremove && sudo journalctl --vacuum-size=1G",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "py_011",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'pandas'",
+      "expected": "pip install pandas",
+      "predicted": "pip install pandas",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_012",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'matplotlib'",
+      "expected": "pip install matplotlib",
+      "predicted": "pip install matplotlib",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_013",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'httpx'",
+      "expected": "pip install httpx",
+      "predicted": "pip install httpx",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_014",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'celery'",
+      "expected": "pip install celery",
+      "predicted": "pip install celery",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_015",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'pydantic'",
+      "expected": "pip install pydantic",
+      "predicted": "pip install pydantic",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_016",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'sqlalchemy'",
+      "expected": "pip install sqlalchemy",
+      "predicted": "pip install sqlalchemy",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_017",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'redis'",
+      "expected": "pip install redis",
+      "predicted": "pip install redis",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_018",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'click'",
+      "expected": "pip install click",
+      "predicted": "pip install click",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_019",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'pytest'",
+      "expected": "pip install pytest",
+      "predicted": "pip install pytest",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_020",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'jwt'",
+      "expected": "pip install PyJWT",
+      "predicted": "pip install PyJWT",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_021",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'yaml'",
+      "expected": "pip install pyyaml",
+      "predicted": "pip install pyyaml",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_022",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'toml'",
+      "expected": "pip install toml",
+      "predicted": "pip install toml",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_023",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'grpc'",
+      "expected": "pip install grpcio",
+      "predicted": "pip install grpcio",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_024",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'psycopg2'",
+      "expected": "pip install psycopg2-binary",
+      "predicted": "pip install psycopg2-binary",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_025",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'pymongo'",
+      "expected": "pip install pymongo",
+      "predicted": "pip install pymongo",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_027",
+      "category": "python",
+      "error": "OSError: [Errno 98] Address already in use",
+      "expected": "lsof -ti:8000 | xargs kill -9",
+      "predicted": "sudo lsof -i :<port_number> | awk 'NR!=1 {print $2}' | xargs kill -9",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.556
+      }
+    },
+    {
+      "id": "py_028",
+      "category": "python",
+      "error": "Error: Command '['/app/venv/bin/python3', '-Im', 'ensurepip', '--upgrade']' returned non-zero exit status 1",
+      "expected": "sudo apt-get install python3-venv -y",
+      "predicted": "python -m pip install --upgrade pip",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.2
+      }
+    },
+    {
+      "id": "py_029",
+      "category": "python",
+      "error": "bash: venv/bin/activate: No such file or directory",
+      "expected": "python3 -m venv venv && source venv/bin/activate",
+      "predicted": "python -m venv venv && source venv/bin/activate",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.833
+      }
+    },
+    {
+      "id": "pip_006",
+      "category": "pip",
+      "error": "WARNING: pip is configured with locations that require TLS/SSL, however the ssl module in Python is not available",
+      "expected": "conda install openssl",
+      "predicted": "pip install --upgrade pip",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.333
+      }
+    },
+    {
+      "id": "pip_007",
+      "category": "pip",
+      "error": "ERROR: Could not find a version that satisfies the requirement django==3.0 (from versions: 4.0, 4.1, 4.2)",
+      "expected": "pip install django==4.2",
+      "predicted": "pip install --upgrade pip setuptools wheel",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "pip_008",
+      "category": "pip",
+      "error": "error: legacy-install-failure\n  \u00d7 Encountered error while trying to install package\n  \u2570\u2500> psycopg2",
+      "expected": "pip install psycopg2-binary",
+      "predicted": "pip install --upgrade pip setuptools wheel && pip install psycopg2-binary",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.6
+      }
+    },
+    {
+      "id": "pip_009",
+      "category": "pip",
+      "error": "WARNING: Retrying (Retry(total=4, connect=None)) after connection broken by 'NewConnectionError'",
+      "expected": "pip install numpy --no-cache-dir",
+      "predicted": "pip install --upgrade pip setuptools wheel",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.444
+      }
+    },
+    {
+      "id": "pip_010",
+      "category": "pip",
+      "error": "WARNING: pip is configured with locations that require TLS/SSL, however the ssl module in Python is not available",
+      "expected": "python3 -m pip install --upgrade pip",
+      "predicted": "pip install --upgrade pip",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.75
+      }
+    },
+    {
+      "id": "node_005",
+      "category": "nodejs",
+      "error": "FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory",
+      "expected": "node --max-old-space-size=4096 build.js",
+      "predicted": "node --max-old-space-size=4096 my-script.js",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "node_006",
+      "category": "nodejs",
+      "error": "Error: The module '/app/node_modules/bcrypt/lib/binding/napi-v3/bcrypt_lib.node' was compiled against a different Node.js version",
+      "expected": "npm rebuild",
+      "predicted": "nvm use node && npm rebuild bcrypt",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.444
+      }
+    },
+    {
+      "id": "node_007",
+      "category": "nodejs",
+      "error": "SyntaxError: Cannot use import statement in a module",
+      "expected": "node --experimental-vm-modules index.js",
+      "predicted": "npm install --save-dev @babel/core @babel/preset-env",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "node_008",
+      "category": "nodejs",
+      "error": "Error: listen EADDRINUSE: address already in use :::3000",
+      "expected": "lsof -ti:3000 | xargs kill -9 && node server.js",
+      "predicted": "sudo lsof -i :3000 | awk 'NR!=1 {print $2}' | xargs kill -9",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.476
+      }
+    },
+    {
+      "id": "node_009",
+      "category": "nodejs",
+      "error": "Error: Cannot find module 'mongoose'\nRequire stack:\n- /app/app.js",
+      "expected": "npm install mongoose",
+      "predicted": "npm install mongoose",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "node_010",
+      "category": "nodejs",
+      "error": "Error: Cannot find module 'cors'\nRequire stack:\n- /app/app.js",
+      "expected": "npm install cors",
+      "predicted": "npm install cors",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "node_011",
+      "category": "nodejs",
+      "error": "Error: Cannot find module 'jsonwebtoken'",
+      "expected": "npm install jsonwebtoken",
+      "predicted": "npm install jsonwebtoken",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "npm_006",
+      "category": "npm",
+      "error": "sh: react-scripts: command not found",
+      "expected": "npm install",
+      "predicted": "npm install -g create-react-app",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "npm_007",
+      "category": "npm",
+      "error": "npm ERR! engine Unsupported platform for fsevents@2.3.2: wanted {\"os\":\"darwin\"} (current: {\"os\":\"linux\"})",
+      "expected": "npm install --ignore-scripts",
+      "predicted": "nvm use 16",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "npm_008",
+      "category": "npm",
+      "error": "npm ERR! code EOVERRIDE\nnpm ERR! Override for minimist@^1.2.6 conflicts",
+      "expected": "npm audit fix --force",
+      "predicted": "rm -rf node_modules package-lock.json && npm install",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.182
+      }
+    },
+    {
+      "id": "npm_009",
+      "category": "npm",
+      "error": "npm ERR! code EINTEGRITY\nnpm ERR! sha512-... integrity checksum failed",
+      "expected": "npm cache clean --force && npm install",
+      "predicted": "npm cache clean --force",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.8
+      }
+    },
+    {
+      "id": "npm_010",
+      "category": "npm",
+      "error": "npm WARN deprecated yarn@1.22.22: Please update to Yarn v2",
+      "expected": "npm install -g yarn@latest",
+      "predicted": "yarn global upgrade -g yarn",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.25
+      }
+    },
+    {
+      "id": "ts_006",
+      "category": "typescript",
+      "error": "error TS17004: Cannot use JSX unless the '--jsx' flag is provided",
+      "expected": "npx tsc --jsx react",
+      "predicted": "npx tsc --jsx react",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "ts_007",
+      "category": "typescript",
+      "error": "error TS2585: 'Promise' only refers to a type, but is being used as a value here. Do you need to change your target library?",
+      "expected": "npx tsc --target ES2017",
+      "predicted": "tsc --target es6",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "ts_008",
+      "category": "typescript",
+      "error": "error TS2307: Cannot find module '@/components/Button'",
+      "expected": "npm install --save-dev tsconfig-paths",
+      "predicted": "npm install --save-dev @types/vue@next",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.75
+      }
+    },
+    {
+      "id": "ts_009",
+      "category": "typescript",
+      "error": "error TS1005: ',' expected. TypeScript version mismatch",
+      "expected": "npm install --save-dev typescript@latest",
+      "predicted": "npm install -g typescript@latest",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.75
+      }
+    },
+    {
+      "id": "ts_010",
+      "category": "typescript",
+      "error": "error TS7016: Could not find a declaration file for module 'lodash'",
+      "expected": "npm install --save-dev @types/lodash",
+      "predicted": "npm install lodash --save-dev",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.75
+      }
+    },
+    {
+      "id": "docker_007",
+      "category": "docker",
+      "error": "Error response from daemon: network mynet not found",
+      "expected": "docker network create mynet && docker run --network mynet nginx",
+      "predicted": "docker network create mynet",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "docker_008",
+      "category": "docker",
+      "error": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /host/data",
+      "expected": "mkdir -p /host/data && docker run -v /host/data:/app/data myapp",
+      "predicted": "docker run -v /host/data:/container/data my-image",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.429
+      }
+    },
+    {
+      "id": "docker_009",
+      "category": "docker",
+      "error": "Error response from daemon: Head \"https://private.registry.com/v2/myapp/manifests/latest\": unauthorized: authentication required",
+      "expected": "docker login private.registry.com",
+      "predicted": "docker login private.registry.com",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "docker_011",
+      "category": "docker",
+      "error": "Error response from daemon: Container mycontainer is not running",
+      "expected": "docker start mycontainer && docker exec -it mycontainer bash",
+      "predicted": "docker start mycontainer",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.6
+      }
+    },
+    {
+      "id": "docker_012",
+      "category": "docker",
+      "error": "ERROR: Version in \"./docker-compose.yml\" is unsupported",
+      "expected": "docker compose up",
+      "predicted": "sed -i 's/13.04/18.09/' ./docker-compose.yml",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "docker_013",
+      "category": "docker",
+      "error": "Error response from daemon: conflict: unable to delete image (cannot be forced) - image is being used by running container",
+      "expected": "docker stop $(docker ps -q --filter ancestor=myapp:old) && docker rmi myapp:old",
+      "predicted": "docker rmi $(docker ps -q)",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.533
+      }
+    },
+    {
+      "id": "docker_014",
+      "category": "docker",
+      "error": "ERROR: multiple platforms feature is currently not supported for docker driver",
+      "expected": "docker buildx create --use && docker buildx build --platform linux/arm64 -t myapp .",
+      "predicted": "docker buildx create --use",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.533
+      }
+    },
+    {
+      "id": "git_009",
+      "category": "git",
+      "error": "error: Your local changes to the following files would be overwritten by merge",
+      "expected": "git checkout -- . && git stash pop",
+      "predicted": "git stash save 'WIP: before merge' && git pull && git stash pop",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "git_010",
+      "category": "git",
+      "error": "error: cannot rebase: you have unstaged changes",
+      "expected": "git stash && git rebase main && git stash pop",
+      "predicted": "git stash save 'WIP: before rebasing' && git rebase && git stash pop",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "git_011",
+      "category": "git",
+      "error": "warning: You appear to have cloned an empty repository",
+      "expected": "git submodule update --init --recursive",
+      "predicted": "git checkout main",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.25
+      }
+    },
+    {
+      "id": "git_012",
+      "category": "git",
+      "error": "error: src refspec v1.0.0 does not match any",
+      "expected": "git tag v1.0.0 && git push origin v1.0.0",
+      "predicted": "git fetch --tags && git checkout tags/v1.0.0",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.333
+      }
+    },
+    {
+      "id": "git_013",
+      "category": "git",
+      "error": "Author identity unknown\n*** Please tell me who you are.\nRun\n  git config --global user.email",
+      "expected": "git config --global user.email 'you@example.com' && git config --global user.name 'Your Name'",
+      "predicted": "git config --global user.email \"you@example.com\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "git_014",
+      "category": "git",
+      "error": "error: could not apply a1b2c3d... fix bug\nhint: After resolving the conflicts, mark them with\ngit add <paths>",
+      "expected": "git cherry-pick --abort",
+      "predicted": "git mergetool",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.4
+      }
+    },
+    {
+      "id": "git_015",
+      "category": "git",
+      "error": "fatal: 'origin' does not appear to be a git repository\nfatal: Could not read from remote repository",
+      "expected": "git remote add origin https://github.com/user/repo.git",
+      "predicted": "git init && git remote add origin <repository_url>",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "git_016",
+      "category": "git",
+      "error": "batch response: This repository is over its data quota. Purchase more data packs to restore access",
+      "expected": "git lfs migrate import --include='*.bin,*.pt,*.gguf' && git push origin main",
+      "predicted": "git config --global credential.helper store",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.143
+      }
+    },
+    {
+      "id": "git_017",
+      "category": "git",
+      "error": "pre-commit hook failed (add --no-verify to bypass)",
+      "expected": "git commit --no-verify -m 'wip'",
+      "predicted": "git config core.editor nano && git commit -m \"Fix pre-commit hook\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.4
+      }
+    },
+    {
+      "id": "shell_006",
+      "category": "shell",
+      "error": "",
+      "expected": "export MY_VAR=value",
+      "predicted": "sudo apt clean && sudo journalctl --vacuum-size=1G",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "shell_007",
+      "category": "shell",
+      "error": "bash: jq: command not found",
+      "expected": "brew install jq",
+      "predicted": "brew install jq",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "shell_008",
+      "category": "shell",
+      "error": "bash: ffmpeg: command not found",
+      "expected": "brew install ffmpeg",
+      "predicted": "sudo apt install ffmpeg",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "shell_009",
+      "category": "shell",
+      "error": "bash: htop: command not found",
+      "expected": "brew install htop",
+      "predicted": "sudo apt install htop",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "shell_010",
+      "category": "shell",
+      "error": "bash: kill: (1234) - Operation not permitted",
+      "expected": "sudo kill 1234",
+      "predicted": "sudo chmod +x /usr/local/bin/my_script.sh",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.286
+      }
+    },
+    {
+      "id": "shell_011",
+      "category": "shell",
+      "error": "ln: /usr/bin/python: File exists",
+      "expected": "ln -sf /usr/local/bin/python3 /usr/bin/python",
+      "predicted": "sudo mv /usr/bin/python{,.bak} && sudo ln -s /usr/local/bin/python3 /usr/bin/python",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "shell_012",
+      "category": "shell",
+      "error": "tar: archive.tar.gz: Cannot open: No such file or directory",
+      "expected": "ls *.tar.gz",
+      "predicted": "ls -l | grep archive.tar.gz && tar xf archive.tar.gz",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.2
+      }
+    },
+    {
+      "id": "shell_013",
+      "category": "shell",
+      "error": "curl: (60) SSL certificate problem: unable to get local issuer certificate",
+      "expected": "curl -k https://api.example.com",
+      "predicted": "sudo apt-get install ca-certificates",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "shell_014",
+      "category": "shell",
+      "error": "no crontab for user - using an empty one",
+      "expected": "crontab -l > /tmp/cron_bak; echo '0 * * * * /path/to/script.sh' >> /tmp/cron_bak; crontab /tmp/cron_bak",
+      "predicted": "crontab -e",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.167
+      }
+    },
+    {
+      "id": "shell_015",
+      "category": "shell",
+      "error": "bash: unzip: command not found",
+      "expected": "brew install unzip",
+      "predicted": "sudo apt install unzip",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "cargo_001",
+      "category": "cargo",
+      "error": "error: no such command: `build`\nDid you mean `build`?\n\nView all installed commands with `cargo --list`",
+      "expected": "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
+      "predicted": "cargo install cargo-make",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "cargo_003",
+      "category": "cargo",
+      "error": "error: failed to select a version for `rand`.\n    ... required by package `myapp v0.1.0`",
+      "expected": "cargo update",
+      "predicted": "cargo update",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "cargo_004",
+      "category": "cargo",
+      "error": "error: toolchain 'stable-aarch64-apple-darwin' is not installed",
+      "expected": "rustup toolchain install stable",
+      "predicted": "rustup toolchain install stable-aarch64-apple-darwin",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.75
+      }
+    },
+    {
+      "id": "cargo_005",
+      "category": "cargo",
+      "error": "error: linker `cc` not found",
+      "expected": "xcode-select --install",
+      "predicted": "export CC=gcc",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "cargo_006",
+      "category": "cargo",
+      "error": "error: test failed, to rerun pass '--lib'",
+      "expected": "cargo test -- --nocapture",
+      "predicted": "cargo clean && cargo build --lib",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.222
+      }
+    },
+    {
+      "id": "cargo_007",
+      "category": "cargo",
+      "error": "error: 'rustfmt' is not installed for the toolchain 'stable'",
+      "expected": "rustup component add rustfmt",
+      "predicted": "cargo install rustfmt --toolchain stable",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.222
+      }
+    },
+    {
+      "id": "cargo_008",
+      "category": "cargo",
+      "error": "error: 'clippy' is not installed for the toolchain 'stable'",
+      "expected": "rustup component add clippy",
+      "predicted": "rustup component add clippy",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "cargo_009",
+      "category": "cargo",
+      "error": "error: no such subcommand: `outdated`",
+      "expected": "cargo install cargo-outdated",
+      "predicted": "cargo install cargo-outdated",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "cargo_010",
+      "category": "cargo",
+      "error": "error: the lock file /app/Cargo.lock needs to be updated but --frozen was passed",
+      "expected": "cargo update",
+      "predicted": "cargo update -p <package-name>",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "ssh_001",
+      "category": "ssh",
+      "error": "Permission denied (publickey).",
+      "expected": "ssh-keygen -t ed25519 -C 'your@email.com' && ssh-copy-id user@server.com",
+      "predicted": "ssh-add ~/.ssh/id_rsa",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "ssh_002",
+      "category": "ssh",
+      "error": "ssh: connect to host server.com port 22: Connection refused",
+      "expected": "ssh -p 2222 user@server.com",
+      "predicted": "sudo ufw allow ssh",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.25
+      }
+    },
+    {
+      "id": "ssh_003",
+      "category": "ssh",
+      "error": "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!\nIT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!",
+      "expected": "ssh-keygen -R server.com && ssh user@server.com",
+      "predicted": "ssh-keygen -R \"hostname.example.com\" && ssh-copy-id hostname.example.com",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "ssh_004",
+      "category": "ssh",
+      "error": "ssh: connect to host server.com port 22: Operation timed out",
+      "expected": "ssh -o ConnectTimeout=10 user@server.com",
+      "predicted": "ssh -o ConnectTimeout=10 user@server.com",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "ssh_005",
+      "category": "ssh",
+      "error": "WARNING: UNPROTECTED PRIVATE KEY FILE!\nPermissions 0644 for '/home/user/.ssh/id_rsa' are too open.",
+      "expected": "chmod 600 ~/.ssh/id_rsa && ssh -i ~/.ssh/id_rsa user@server.com",
+      "predicted": "chmod 600 ~/.ssh/id_rsa",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.6
+      }
+    },
+    {
+      "id": "ssh_006",
+      "category": "ssh",
+      "error": "scp: /home/user/: Permission denied",
+      "expected": "scp file.txt user@server.com:/tmp/ && ssh user@server.com 'sudo mv /tmp/file.txt /home/user/'",
+      "predicted": "ssh user@remote_host 'mkdir -p ~/mydir' && scp -r local_dir/ user@remote_host:/home/user/mydir",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.3
+      }
+    },
+    {
+      "id": "db_001",
+      "category": "database",
+      "error": "psql: error: connection to server on socket \"/tmp/.s.PGSQL.5432\" failed: No such file or directory",
+      "expected": "brew services start postgresql",
+      "predicted": "sudo -u postgres psql",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "db_002",
+      "category": "database",
+      "error": "psql: error: connection to server at \"localhost\" (127.0.0.1), port 5432 failed: FATAL: role \"postgres\" does not exist",
+      "expected": "createuser -s postgres",
+      "predicted": "sudo -u postgres psql",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.286
+      }
+    },
+    {
+      "id": "db_003",
+      "category": "database",
+      "error": "createdb: error: database creation failed: ERROR: database \"mydb\" already exists",
+      "expected": "dropdb mydb && createdb mydb",
+      "predicted": "psql -c \"DROP DATABASE mydb;\" && createdb mydb",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "db_004",
+      "category": "database",
+      "error": "ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock'",
+      "expected": "brew services start mysql",
+      "predicted": "sudo systemctl start mysql",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "db_005",
+      "category": "database",
+      "error": "ERROR 1049 (42000): Unknown database 'mydb'",
+      "expected": "mysql -u root -p -e 'CREATE DATABASE mydb;' && mysql -u root -p mydb < dump.sql",
+      "predicted": "mysql -e \"CREATE DATABASE mydb;\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.353
+      }
+    },
+    {
+      "id": "db_006",
+      "category": "database",
+      "error": "Error: unable to open database file",
+      "expected": "touch app.db && sqlite3 app.db",
+      "predicted": "rm -f ~/.local/share/SQLiteStudio/databases.db && sqlite3 ~/.local/share/SQLiteStudio/databases.db < ~/.config/SQLiteStudio/init.sql",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.364
+      }
+    },
+    {
+      "id": "make_002",
+      "category": "make",
+      "error": "make: 'install' is up to date.",
+      "expected": "make -B install",
+      "predicted": "sudo make install",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "make_003",
+      "category": "make",
+      "error": "make: gcc: No such file or directory",
+      "expected": "xcode-select --install",
+      "predicted": "export PATH=/usr/local/gcc/bin:$PATH",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "make_004",
+      "category": "make",
+      "error": "Package libssl-dev was not found in the pkg-config search path",
+      "expected": "sudo apt-get install libssl-dev",
+      "predicted": "export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:${PKG_CONFIG_PATH}",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "venv_001",
+      "category": "venv",
+      "error": "Defaulting to user installation because normal site-packages is not writeable",
+      "expected": "python3 -m venv venv && source venv/bin/activate && pip install flask",
+      "predicted": "pip install --user <package_name>",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.308
+      }
+    },
+    {
+      "id": "venv_002",
+      "category": "venv",
+      "error": "ModuleNotFoundError: No module named 'flask'",
+      "expected": "source venv/bin/activate",
+      "predicted": "pip install flask",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "venv_003",
+      "category": "venv",
+      "error": "CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'",
+      "expected": "conda init bash && source ~/.bashrc && conda activate myenv",
+      "predicted": "eval \"$(conda shell.bash hook)\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "venv_004",
+      "category": "venv",
+      "error": "CondaSSLError: OpenSSL appears to be unavailable on this machine",
+      "expected": "conda update conda && conda create -n myenv python=3.11",
+      "predicted": "conda config --set ssl_verify False",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.167
+      }
+    },
+    {
+      "id": "venv_005",
+      "category": "venv",
+      "error": "PackagesNotFoundError: The following packages are not available from current channels: numpy",
+      "expected": "conda install -c conda-forge numpy",
+      "predicted": "conda install numpy",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.75
+      }
+    },
+    {
+      "id": "py_031",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'kombu'",
+      "expected": "pip install kombu",
+      "predicted": "pip install kombu",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_032",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'boto3'",
+      "expected": "pip install boto3",
+      "predicted": "pip install boto3",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_033",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'google.cloud'",
+      "expected": "pip install google-cloud-storage",
+      "predicted": "pip install google-cloud-storage",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_034",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'openai'",
+      "expected": "pip install openai",
+      "predicted": "pip install openai",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_035",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'chromadb'",
+      "expected": "pip install chromadb",
+      "predicted": "pip install chromadb",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_036",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'selenium'",
+      "expected": "pip install selenium",
+      "predicted": "pip install selenium",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_037",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'PyPDF2'",
+      "expected": "pip install PyPDF2",
+      "predicted": "pip install PyPDF2",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_038",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'openpyxl'",
+      "expected": "pip install openpyxl",
+      "predicted": "pip install openpyxl",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_040",
+      "category": "python",
+      "error": "RuntimeError: CUDA error: no kernel image is available for execution on the device",
+      "expected": "pip install torch --index-url https://download.pytorch.org/whl/cu118",
+      "predicted": "ERROR: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=120)",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "py_041",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'torch'",
+      "expected": "pip install torch",
+      "predicted": "pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.6
+      }
+    },
+    {
+      "id": "py_042",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'transformers'",
+      "expected": "pip install transformers",
+      "predicted": "pip install transformers",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_043",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'uvicorn'",
+      "expected": "pip install uvicorn",
+      "predicted": "pip install uvicorn",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "py_044",
+      "category": "python",
+      "error": "ModuleNotFoundError: No module named 'fastapi'",
+      "expected": "pip install fastapi",
+      "predicted": "pip install fastapi[all]",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "py_045",
+      "category": "python",
+      "error": "sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: users",
+      "expected": "python3 migrate.py --create-tables",
+      "predicted": "python manage.py db upgrade",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "git_018",
+      "category": "git",
+      "error": "error: bad HEAD - I need a HEAD",
+      "expected": "git checkout main && git bisect start",
+      "predicted": "git symbolic-ref HEAD refs/heads/main",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.2
+      }
+    },
+    {
+      "id": "git_019",
+      "category": "git",
+      "error": "fatal: 'feature' is already checked out",
+      "expected": "git worktree prune && git worktree add ../feature feature",
+      "predicted": "git checkout main",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.2
+      }
+    },
+    {
+      "id": "git_020",
+      "category": "git",
+      "error": "error: RPC failed; curl 18 transfer closed with outstanding read data remaining",
+      "expected": "git clone --depth 1 --filter=blob:none https://github.com/large/repo",
+      "predicted": "git pull --rebase",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.222
+      }
+    },
+    {
+      "id": "git_021",
+      "category": "git",
+      "error": "error: gpg failed to sign the data\nfatal: failed to write commit object",
+      "expected": "gpg --list-secret-keys --keyid-format LONG",
+      "predicted": "git config --global user.signingkey <your_gpg_key_id>",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "git_022",
+      "category": "git",
+      "error": "error: pathspec 'my-feature' did not match any file(s) known to git",
+      "expected": "git fetch origin && git checkout my-feature",
+      "predicted": "git checkout my-branch",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.444
+      }
+    },
+    {
+      "id": "git_023",
+      "category": "git",
+      "error": "fatal: ambiguous argument 'HEAD~1': unknown revision or path not in the working tree",
+      "expected": "git log --oneline",
+      "predicted": "git checkout main",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.333
+      }
+    },
+    {
+      "id": "git_024",
+      "category": "git",
+      "error": "error: Your local changes to the following files would be overwritten by merge:\n\tREADME.md",
+      "expected": "git stash && git pull origin main && git stash pop",
+      "predicted": "git stash save 'WIP: before merge' && git pull && git stash pop",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.625
+      }
+    },
+    {
+      "id": "git_025",
+      "category": "git",
+      "error": "fatal: --unshallow on a complete repository does not make sense",
+      "expected": "git fetch origin",
+      "predicted": "git fetch --unshallow",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "docker_015",
+      "category": "docker",
+      "error": "denied: requested access to the resource is denied",
+      "expected": "docker login && docker push myuser/myapp:latest",
+      "predicted": "aws sts get-caller-identity --output text --query 'Account'",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "docker_016",
+      "category": "docker",
+      "error": "docker: Error response from daemon: OCI runtime create failed: container_linux.go:380: starting container process caused: process_linux.go:545: container init caused: rootfs_linux.go:76: mounting \"/dev/shm\" to rootfs: mount /dev/shm:/dev/shm (via /proc/self/fd/6), flags: 0x5001: not a directory: unknown",
+      "expected": "docker run --shm-size=2g myapp",
+      "predicted": "docker system prune -a",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.25
+      }
+    },
+    {
+      "id": "docker_017",
+      "category": "docker",
+      "error": "error: no space left on device",
+      "expected": "docker system prune -af --volumes",
+      "predicted": "sudo apt autoremove && sudo journalctl --vacuum-size=1G",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "docker_018",
+      "category": "docker",
+      "error": "docker: Error response from daemon: invalid env file: /app/.env: open /app/.env: no such file or directory",
+      "expected": "touch .env && docker run --env-file .env myapp",
+      "predicted": "cp .env .app/",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.2
+      }
+    },
+    {
+      "id": "docker_019",
+      "category": "docker",
+      "error": "ERROR: for db  Container \"abc123\" is unhealthy",
+      "expected": "docker-compose logs db",
+      "predicted": "docker logs abc123",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.333
+      }
+    },
+    {
+      "id": "docker_020",
+      "category": "docker",
+      "error": "WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8)",
+      "expected": "docker run --platform linux/amd64 myapp",
+      "predicted": "docker buildx use linux/amd64",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.444
+      }
+    },
+    {
+      "id": "npm_011",
+      "category": "npm",
+      "error": "Error: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:67:19)",
+      "expected": "export NODE_OPTIONS=--openssl-legacy-provider && npm run start",
+      "predicted": "npm rebuild node-sass",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.222
+      }
+    },
+    {
+      "id": "npm_012",
+      "category": "npm",
+      "error": "npm ERR! code ENOWORKSPACES\nnpm ERR! This command does not support workspaces",
+      "expected": "npm install --workspaces",
+      "predicted": "npx create-react-app my-app --template typescript",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "npm_013",
+      "category": "npm",
+      "error": "npm ERR! code ENEEDAUTH\nnpm ERR! need auth This command requires you to be logged in",
+      "expected": "npm login && npm publish",
+      "predicted": "npm login",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "npm_014",
+      "category": "npm",
+      "error": "npm ERR! cipm can only install packages when your package.json and package-lock.json are in sync",
+      "expected": "npm install && npm ci",
+      "predicted": "npm install",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "npm_015",
+      "category": "npm",
+      "error": "npm ERR! code E404\nnpm ERR! 404 Not Found - GET https://registry.npmjs.org/my-package",
+      "expected": "cd ../my-package && npm link && cd - && npm link my-package",
+      "predicted": "npm install my-package@latest",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.2
+      }
+    },
+    {
+      "id": "cargo_011",
+      "category": "cargo",
+      "error": "error: package `myapp v0.1.0` cannot be built because it requires rustc 1.70 or newer",
+      "expected": "rustup update stable && cargo build",
+      "predicted": "rustup update && cargo build --release",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.833
+      }
+    },
+    {
+      "id": "cargo_013",
+      "category": "cargo",
+      "error": "error: targets are not installed: `wasm32-unknown-unknown`",
+      "expected": "rustup target add wasm32-unknown-unknown",
+      "predicted": "cargo install wasm-pack --features build-web && cargo build --target wasm32-unknown-unknown",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.154
+      }
+    },
+    {
+      "id": "cargo_014",
+      "category": "cargo",
+      "error": "error: no such subcommand: `cross`",
+      "expected": "cargo install cross",
+      "predicted": "cargo install cargo-cross",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "cargo_015",
+      "category": "cargo",
+      "error": "error: no such subcommand: `audit`",
+      "expected": "cargo install cargo-audit && cargo audit",
+      "predicted": "git audit --all",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.25
+      }
+    },
+    {
+      "id": "ssh_007",
+      "category": "ssh",
+      "error": "Could not open a connection to your authentication agent.",
+      "expected": "eval $(ssh-agent -s) && ssh-add ~/.ssh/id_ed25519",
+      "predicted": "eval \"$(ssh-agent -s)\" && ssh-add ~/.ssh/id_rsa",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "ssh_008",
+      "category": "ssh",
+      "error": "bind: Address already in use\nchannel_setup_fwd_listener_tcpip: cannot listen to port: 5432",
+      "expected": "lsof -ti:5432 | xargs kill -9 && ssh -L 5432:localhost:5432 user@server.com",
+      "predicted": "sudo lsof -i :5432 | awk 'NR>1 {print $2}' | xargs kill -9",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.435
+      }
+    },
+    {
+      "id": "ssh_010",
+      "category": "ssh",
+      "error": "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+      "expected": "ssh-keygen -R 192.168.1.10 && ssh user@192.168.1.10",
+      "predicted": "ssh-keygen -R \"hostname.example.com\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.444
+      }
+    },
+    {
+      "id": "db_007",
+      "category": "database",
+      "error": "pg_dump: error: connection to server on socket failed: FATAL: password authentication failed for user",
+      "expected": "PGPASSWORD=mypassword pg_dump -U myuser mydb > backup.sql",
+      "predicted": "psql -U myuser -h localhost -W mydatabase",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.286
+      }
+    },
+    {
+      "id": "db_008",
+      "category": "database",
+      "error": "ERROR: relation \"users\" does not exist",
+      "expected": "psql -d mydb -c '\\dt'",
+      "predicted": "psql -c \"CREATE TABLE users (id SERIAL PRIMARY KEY, name VARCHAR(100))\" mydatabase",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.235
+      }
+    },
+    {
+      "id": "db_009",
+      "category": "database",
+      "error": "mysqldump: Got error: 1044: Access denied for user 'root'@'localhost'",
+      "expected": "mysqldump -u root -p --single-transaction mydb",
+      "predicted": "sudo mysqladmin -u root -p flush_privileges",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.5
+      }
+    },
+    {
+      "id": "db_010",
+      "category": "database",
+      "error": "Could not connect to Redis at 127.0.0.1:6379: Connection refused",
+      "expected": "brew services start redis",
+      "predicted": "sudo systemctl restart redis.service",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "make_006",
+      "category": "make",
+      "error": "make: *** No rule to make target 'test'. Stop.",
+      "expected": "make -f Makefile help",
+      "predicted": "./configure --enable-test && make -j$(nproc)",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.222
+      }
+    },
+    {
+      "id": "make_007",
+      "category": "make",
+      "error": "make[2]: *** [CMakeFiles/app.dir/all] Error 2\nmake[1]: *** [CMakeFiles/app.dir/rule] Error 2",
+      "expected": "make -j1 2>&1 | head -50",
+      "predicted": "cmake --build . --target app --config Release",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "venv_006",
+      "category": "venv",
+      "error": "ERROR: Cannot install -r requirements.txt because these package versions have conflicting dependencies.",
+      "expected": "pip install -r requirements.txt --no-deps",
+      "predicted": "pip install --upgrade pip setuptools wheel && pip install -r requirements.txt",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.615
+      }
+    },
+    {
+      "id": "venv_007",
+      "category": "venv",
+      "error": "SyntaxError: f-string: unmatched '(' (app.py, line 5)",
+      "expected": "python3 --version",
+      "predicted": "print(f\"Hello {name}\")",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "venv_008",
+      "category": "venv",
+      "error": "pip: command not found",
+      "expected": "python3 -m ensurepip --upgrade && python3 -m pip install numpy",
+      "predicted": "python3 -m pip install <package_name>",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.615
+      }
+    },
+    {
+      "id": "venv_009",
+      "category": "venv",
+      "error": "CondaEnvironmentError: cannot remove current environment. deactivate and run conda remove again",
+      "expected": "conda deactivate && conda remove -n myenv --all",
+      "predicted": "conda env remove --name myenv --all",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.615
+      }
+    },
+    {
+      "id": "venv_010",
+      "category": "venv",
+      "error": "pyenv: python3: command not found\nThe `python3' command exists in these Python versions: 3.11.0",
+      "expected": "pyenv global 3.11.0",
+      "predicted": "export PATH=\"$(pyenv root)/shims:$PATH\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "aws_001",
+      "category": "cloud",
+      "error": "Unable to locate credentials. You can configure credentials by running \"aws configure\".",
+      "expected": "aws configure",
+      "predicted": "aws configure",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "aws_002",
+      "category": "cloud",
+      "error": "An error occurred (AuthFailure): AWS was not able to validate the provided access credentials",
+      "expected": "aws configure && aws ec2 describe-instances",
+      "predicted": "aws configure",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "aws_003",
+      "category": "cloud",
+      "error": "An error occurred (NoSuchBucket): The specified bucket does not exist",
+      "expected": "aws s3 mb s3://mybucket && aws s3 cp file.txt s3://mybucket/",
+      "predicted": "aws s3api create-bucket --bucket my-new-bucket --create-bucket-configuration LocationConstraint=us-west-2",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.133
+      }
+    },
+    {
+      "id": "aws_004",
+      "category": "cloud",
+      "error": "An error occurred (ResourceNotFoundException): Function not found: arn:aws:lambda:us-east-1:123:function:myFunc",
+      "expected": "aws lambda list-functions --query 'Functions[].FunctionName'",
+      "predicted": "aws lambda update-function-code --function-name myFunc --zip-file fileb://myFunction.zip",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.333
+      }
+    },
+    {
+      "id": "gcloud_001",
+      "category": "cloud",
+      "error": "ERROR: (gcloud.run.deploy) You do not currently have an active account selected",
+      "expected": "gcloud auth login && gcloud run deploy",
+      "predicted": "gcloud auth login",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "gcloud_002",
+      "category": "cloud",
+      "error": "ERROR: (gcloud.config.set) The project property must be set to a valid project ID, not a project name",
+      "expected": "gcloud projects list",
+      "predicted": "gcloud config set project YOUR_PROJECT_ID",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.25
+      }
+    },
+    {
+      "id": "yarn_001",
+      "category": "yarn",
+      "error": "bash: yarn: command not found",
+      "expected": "npm install -g yarn",
+      "predicted": "npm install -g yarn",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "yarn_002",
+      "category": "yarn",
+      "error": "error An unexpected error occurred: \"https://registry.yarnpkg.com/react: Request failed \\\"404 Not Found\\\"\"",
+      "expected": "yarn cache clean && yarn install",
+      "predicted": "yarn cache clean --force",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "yarn_003",
+      "category": "yarn",
+      "error": "error This project's package.json defines \"packageManager\": \"yarn@3.6.0\" which is not the installed version",
+      "expected": "corepack enable && corepack prepare yarn@3.6.0 --activate",
+      "predicted": "nvm use 18 && npm install -g yarn",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.143
+      }
+    },
+    {
+      "id": "yarn_004",
+      "category": "yarn",
+      "error": "Usage Error: Workspaces can only be enabled if the rootDir is configured",
+      "expected": "yarn config set nodeLinker node-modules && yarn workspace api add express",
+      "predicted": "npm config set workspacesEnabled true",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.267
+      }
+    },
+    {
+      "id": "pip_011",
+      "category": "pip",
+      "error": "ERROR: Could not find a version that satisfies the requirement private-pkg (from versions: none)\nERROR: No matching distribution found for private-pkg",
+      "expected": "pip install private-pkg --extra-index-url https://pypi.company.com/simple",
+      "predicted": "pip install --index-url https://private-repo.example.com/simple/ private-pkg",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.6
+      }
+    },
+    {
+      "id": "pip_012",
+      "category": "pip",
+      "error": "ld: library 'ssl' not found\nerror: command '/usr/bin/clang' failed with exit code 1",
+      "expected": "brew install openssl && pip install mysqlclient",
+      "predicted": "export LDFLAGS=\"-L/usr/local/opt/openssl/lib\" && export CPPFLAGS=\"-I/usr/local/opt/openssl/include\"",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.2
+      }
+    },
+    {
+      "id": "pip_013",
+      "category": "pip",
+      "error": "ERROR: File \"setup.py\" not found. Directory cannot be installed in editable mode",
+      "expected": "pip install -e . --no-build-isolation",
+      "predicted": "pip install -e .[dev]",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.667
+      }
+    },
+    {
+      "id": "pip_014",
+      "category": "pip",
+      "error": "ERROR: Cannot install numpy<2.0 and numpy==2.1.0 because these package versions have conflicting dependencies",
+      "expected": "pip install 'numpy<2.0' --force-reinstall",
+      "predicted": "pip uninstall numpy && pip install numpy==2.1.0",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.4
+      }
+    },
+    {
+      "id": "pip_015",
+      "category": "pip",
+      "error": "error: Microsoft Visual C++ 14.0 or greater is required",
+      "expected": "pip install torch --index-url https://download.pytorch.org/whl/cpu",
+      "predicted": "python -m pip install --upgrade pip setuptools wheel",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.333
+      }
+    },
+    {
+      "id": "node_012",
+      "category": "nodejs",
+      "error": "gyp ERR! stack Error: not found: make",
+      "expected": "xcode-select --install && npm install bcrypt",
+      "predicted": "npm install -g node-gyp",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.4
+      }
+    },
+    {
+      "id": "node_013",
+      "category": "nodejs",
+      "error": "Error: Cannot find module 'axios'",
+      "expected": "npm install axios",
+      "predicted": "npm install axios",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "node_014",
+      "category": "nodejs",
+      "error": "Error: Cannot find module 'uuid'",
+      "expected": "npm install uuid",
+      "predicted": "npm install uuid",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "node_015",
+      "category": "nodejs",
+      "error": "Error: Cannot find module 'lodash'",
+      "expected": "npm install lodash",
+      "predicted": "npm install lodash",
+      "scores": {
+        "exact_match": true,
+        "normalized_match": true,
+        "token_f1": 1.0
+      }
+    },
+    {
+      "id": "ts_013",
+      "category": "typescript",
+      "error": "error TS2584: Cannot find name 'console'. Do you need to change your target library?",
+      "expected": "npm install --save-dev @types/node",
+      "predicted": "import 'core-js/stable'",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "ts_014",
+      "category": "typescript",
+      "error": "error TS7006: Parameter 'req' implicitly has an 'any' type.",
+      "expected": "npm install --save-dev @types/express",
+      "predicted": "import { Request } from 'express';",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "ts_015",
+      "category": "typescript",
+      "error": "Error: Cannot find module 'tsconfig-paths/register'",
+      "expected": "npm install --save-dev tsconfig-paths ts-node",
+      "predicted": "npm install -g typescript ts-node-dev-ts",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.4
+      }
+    },
+    {
+      "id": "shell_016",
+      "category": "shell",
+      "error": "bash: tree: command not found",
+      "expected": "brew install tree",
+      "predicted": "sudo apt install tree",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "shell_017",
+      "category": "shell",
+      "error": "bash: wget: command not found",
+      "expected": "brew install wget",
+      "predicted": "sudo apt install wget",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "shell_018",
+      "category": "shell",
+      "error": "bash: nmap: command not found",
+      "expected": "brew install nmap",
+      "predicted": "sudo apt install nmap",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.571
+      }
+    },
+    {
+      "id": "shell_019",
+      "category": "shell",
+      "error": "du: illegal option -- s",
+      "expected": "du -sh -- *",
+      "predicted": "export LC_ALL=C",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.0
+      }
+    },
+    {
+      "id": "shell_020",
+      "category": "shell",
+      "error": "bash: /etc/profile: Permission denied",
+      "expected": "echo 'export PATH=$PATH:/usr/local/bin' | sudo tee -a /etc/profile",
+      "predicted": "sudo chown root:root /etc/profile && sudo chmod 644 /etc/profile",
+      "scores": {
+        "exact_match": false,
+        "normalized_match": false,
+        "token_f1": 0.267
+      }
+    }
+  ]
+}

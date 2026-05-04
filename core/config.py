@@ -22,7 +22,7 @@ PROVIDER_DEFAULTS = {
     "ollama": {
         "host": "localhost",
         "port": 11434,
-        "model": "yolo-7b",
+        "model": "hf.co/erdemozkan/YOLO-Coder-8B",
         "api_key": "ollama",
         # Ollama exposes /api/tags for listing models (not OpenAI-compat)
         "health_path": "/api/tags",
@@ -52,7 +52,7 @@ PROVIDER_DEFAULTS = {
 PROVIDER_RUN_INSTRUCTIONS = {
     "ollama": [
         "Start Ollama:       ollama serve",
-        "Pull the model:     ollama pull yolo-coder",
+        "Pull the model:     ollama run hf.co/erdemozkan/YOLO-Coder-8B",
         "Verify it's there:  ollama list",
     ],
     "lmstudio": [

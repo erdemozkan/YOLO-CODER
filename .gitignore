@@ -8,4 +8,23 @@ demos/
 .DS_Store
 *.egg-info/
 website/
-website/
+dist/
+
+# Claude local settings
+.claude/
+
+# Root training data dump
+cli_repair_dataset.jsonl
+
+# Raw benchmark run files (keep PNGs, ignore JSON runs)
+benchmark/results/*.json
+
+# Training data variants
+benchmark/dataset/cli_code_fixer_clean.jsonl
+benchmark/dataset/cli_code_fixer_test_data_weighted.jsonl
+
+# Test cache
+.pytest_cache/
+
+# One-off website generators
+website/make_og.py

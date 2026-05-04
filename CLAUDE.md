@@ -28,7 +28,7 @@ If it works, it snapshots the fix. If it doesn't, it rolls back. The user sees w
 yoco.py                  ← entry point, CLI flags, main loop
 core/
   agent.py               ← LLM interaction, prompt construction, response parsing
-  interceptors.py        ← 23 deterministic fix rules (no LLM involved)
+  interceptors.py        ← 73 deterministic fix rules (no LLM involved)
   memory.py              ← fix memory: fingerprint errors, cache successful fixes
   snapshot.py            ← file snapshots before any change, rollback support
   history.py             ← append-only run log (~/.yolo/history.jsonl)
@@ -55,11 +55,11 @@ tests/
 
 ## The fix pipeline in detail
 
-**Interceptors** (`core/interceptors.py`) are regex rules that fire before anything else. There are 23 of them covering Python imports, pip errors, permission errors, file-not-found, Node.js module errors, npm errors, TypeScript errors, Docker image/port/container/daemon errors, and Git errors. Each interceptor returns a `FixResult` with a shell command to run or a file patch to apply. Interceptors are O(1) — no LLM call, no disk I/O beyond the fix itself.
+**Interceptors** (`core/interceptors.py`) are regex rules that fire before anything else. There are 73 of them covering Python imports, pip errors, permission errors, file-not-found, Node.js module errors, npm errors, TypeScript errors, Docker image/port/container/daemon errors, Git errors, SSH errors, shell errors, database errors (PostgreSQL, MySQL, Redis, SQLite), Cargo/Rust errors, make/cmake errors, and venv/conda errors. Each interceptor returns a `FixResult` with a shell command to run or a file patch to apply. Interceptors are O(1) — no LLM call, no disk I/O beyond the fix itself.
 
 **Fix Memory** (`core/memory.py`) fingerprints each error by type and call site, normalized to strip line numbers and variable names. If the fingerprint matches a past successful fix, that fix is replayed directly. Stored in `~/.yolo/fix_memory.jsonl`. Minimum confidence: 1 prior success.
 
-**LLM Agent** (`core/agent.py`) is the fallback. Sends the error + surrounding code context to the local model via OpenAI-compatible API (`http://localhost:11434/v1`). Default model: `yolo-coder` (fine-tuned Qwen2.5-Coder-7B). The prompt asks for a single bare bash command. Response is validated before execution — no arbitrary code eval without a safety check.
+**LLM Agent** (`core/agent.py`) is the fallback. Sends the error + surrounding code context to the local model via OpenAI-compatible API (`http://localhost:11434/v1`). Default model: `hf.co/erdemozkan/YOLO-Coder-8B` (fine-tuned Qwen2.5-Coder-7B). The prompt asks for a single bare bash command. Response is validated before execution — no arbitrary code eval without a safety check.
 
 **Snapshot + Rollback** (`core/snapshot.py`) takes a snapshot of every file before touching it — only the first snapshot per file per session, so the pre-YOLO state is always preserved even across multiple fix attempts. Session is persisted to `~/.yolo/last_session.json` so `--rollback` works after the process exits.
 
@@ -94,31 +94,33 @@ ollama serve   # or: open -a Ollama (macOS app)
 
 | Model | Size | HF Repo |
 |---|---|---|
-| `YOLO-1.5B-Qwen-Coder` | ~941MB | [erdemozkan/YOLO-1.5B-Qwen-Coder](https://huggingface.co/erdemozkan/YOLO-1.5B-Qwen-Coder) |
-| `YOLO-7B-Qwen-Coder` | ~4.4GB (Q4) | [erdemozkan/YOLO-7B-Qwen-Coder](https://huggingface.co/erdemozkan/YOLO-7B-Qwen-Coder) |
+| `YOLO-Coder-1.5B` | ~941MB | [erdemozkan/YOLO-Coder-1.5B](https://huggingface.co/erdemozkan/YOLO-Coder-1.5B) |
+| `YOLO-Coder-8B` | ~4.4GB (Q4) | [erdemozkan/YOLO-Coder-8B](https://huggingface.co/erdemozkan/YOLO-Coder-8B) |
+
+Training data: 6,719 error/fix pairs across 15 categories.
 
 ### Option A — Pull directly via Ollama (simplest)
 
 ```bash
-ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder
-ollama run hf.co/erdemozkan/YOLO-7B-Qwen-Coder
+ollama run hf.co/erdemozkan/YOLO-Coder-8B
+ollama run hf.co/erdemozkan/YOLO-Coder-1.5B
 ```
 
 Then set the model name in config:
 
 ```bash
-echo '{"model": "hf.co/erdemozkan/YOLO-7B-Qwen-Coder"}' > ~/.yolo/config.json
+echo '{"model": "hf.co/erdemozkan/YOLO-Coder-8B"}' > ~/.yolo/config.json
 ```
 
 ### Option B — Download GGUF manually and register
 
 ```bash
 # 1. Download GGUF from HuggingFace Files tab:
-#    https://huggingface.co/erdemozkan/YOLO-7B-Qwen-Coder
+#    https://huggingface.co/erdemozkan/YOLO-Coder-8B
 
-# 2. Create Modelfile (see YOLO-MODEL-FILES/Modelfile-7B for the template)
+# 2. Create Modelfile (see YOLO-MODEL-FILES/Modelfile-Coder-8B for the template)
 cat > Modelfile <<'EOF'
-FROM ./YOLO-7B-Qwen-q4.gguf
+FROM ./YOLO-Coder-8B-Q4_K_M.gguf
 TEMPLATE """{{ if .System }}<|im_start|>system
 {{ .System }}<|im_end|>
 {{ end }}<|im_start|>user
@@ -133,21 +135,21 @@ SYSTEM """You are a CLI repair tool. Output ONLY a single bare bash command to f
 EOF
 
 # 3. Register
-ollama create yolo-7b -f Modelfile
+ollama create yolo-coder-8b -f Modelfile
 
 # 4. Verify
-ollama run yolo-7b "ModuleNotFoundError: No module named 'requests'"
+ollama run yolo-coder-8b "ModuleNotFoundError: No module named 'requests'"
 # expected output: pip install requests
 
 # 5. Set as default
-echo '{"model": "yolo-7b"}' > ~/.yolo/config.json
+echo '{"model": "hf.co/erdemozkan/YOLO-Coder-8B"}' > ~/.yolo/config.json
 ```
 
 ### Override per run
 
 ```bash
-yoco --model yolo-7b python3 myapp.py
-yoco --model hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder python3 myapp.py
+yoco --model hf.co/erdemozkan/YOLO-Coder-8B python3 myapp.py
+yoco --model hf.co/erdemozkan/YOLO-Coder-1.5B python3 myapp.py
 ```
 
 Fine-tuning uses MLX LoRA on Apple Silicon. Training data is in `YOLO-MODEL-FILES/data/`. Dataset generator is `YOLO-MODEL-FILES/generate_dataset.py`. Format is ChatML with a system prompt enforcing single-command output.
@@ -174,7 +176,7 @@ Fields that matter:
 
 ```json
 {
-  "model": "yolo-coder",
+  "model": "hf.co/erdemozkan/YOLO-Coder-8B",
   "endpoint": "http://localhost:11434/v1",
   "max_attempts": 3,
   "dry_run": false,
