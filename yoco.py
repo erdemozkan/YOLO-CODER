@@ -484,7 +484,7 @@ def main():
         print(f"\n{Fore.MAGENTA}--- Attempt {attempt}/{max_attempts} ---")
 
         # 1. Check Auto-Interceptors First
-        result = run_auto_intercept(stderr, ctx.declared_deps, dry_run=dry_run)
+        result = run_auto_intercept(stderr, ctx.declared_deps, dry_run=dry_run, command=original_cmd)
 
         if result is not None:
             _quip()
@@ -509,6 +509,7 @@ def main():
                     result = agent.ask(
                         original_cmd, exit_code, stderr,
                         history=attempt_history if attempt_history else None,
+                        attempt=attempt,
                     )
             safe, reason = result.is_valid()
             if not safe:

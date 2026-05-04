@@ -13,10 +13,16 @@ SYSTEM_PROMPT = (
 )
 
 
-def predict(error: str, model: str = "gpt-4o") -> str:
+def predict(error: str, model: str = "gpt-4o",
+            command: str = "", **_kwargs) -> str:
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY not set")
+
+    user_content = (
+        f"[Linux] $ {command}\nError:\n{error}\nFIX:" if command
+        else f"Error:\n{error}\nFIX:"
+    )
 
     client = OpenAI(api_key=api_key)
     try:
@@ -24,7 +30,7 @@ def predict(error: str, model: str = "gpt-4o") -> str:
             model=model,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": error},
+                {"role": "user", "content": user_content},
             ],
             temperature=0.1,
             max_tokens=128,

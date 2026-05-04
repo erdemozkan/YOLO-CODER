@@ -83,7 +83,7 @@ Error hits
     │
     ▼
 ┌─────────────────────────────────────────────────┐
-│  Brain 1: Interceptors                          │  ← 23 regex rules
+│  Brain 1: Interceptors                          │  ← 73 deterministic rules
 │  "ModuleNotFoundError: No module named 'flask'" │    fires in <1ms
 │  → pip install flask                            │    no LLM involved
 └─────────────────────────────────────────────────┘
@@ -105,6 +105,28 @@ Error hits
 
 Fix works → snapshot it, remember it, move on.
 Fix fails → roll back every file to its pre-YOLO state, try again.
+
+---
+
+## Benchmark
+
+**218 real CLI errors. Same prompts. Same scoring. YOLO-Coder-8B beats GPT-4o — running 100% offline.**
+
+| Model | Raw LLM | Pipeline×3 |
+|---|---|---|
+| **YOLO-Coder-8B** | 59.2% | **77.1%** |
+| Claude Sonnet 4.6 | 60.1% | — |
+| GPT-4o | 48.6% | — |
+| YOLO-Coder-1.5B | 42.2% | 71.1% |
+
+<p align="center">
+  <img src="assets/bench_raw_horizontal.png" alt="Raw LLM benchmark results" width="720" />
+</p>
+<p align="center">
+  <img src="assets/bench_pipeline3_horizontal.png" alt="Full pipeline×3 benchmark results" width="720" />
+</p>
+
+> Scoring: structural match (flag-order-independent, compound-command-aware). Dataset: [github.com/erdemozkan/YOLO-CODER/tree/main/benchmark](https://github.com/erdemozkan/YOLO-CODER/tree/main/benchmark)
 
 ---
 
@@ -139,21 +161,21 @@ ollama serve   # start the server (runs on http://localhost:11434)
 
 ```bash
 # 1.5B model — fast, ~941MB, runs on any machine
-ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder
+ollama run hf.co/erdemozkan/YOLO-Coder-1.5B
 
-# 7B model — smarter, ~4.4GB, needs ~6GB RAM
-ollama run hf.co/erdemozkan/YOLO-7B-Qwen-Coder
+# 8B model — smarter, ~4.4GB, needs ~6GB RAM
+ollama run hf.co/erdemozkan/YOLO-Coder-8B
 ```
 
 **Option B — Download GGUF manually and register:**
 
 ```bash
 # Download the Q4 GGUF from HuggingFace
-# → https://huggingface.co/erdemozkan/YOLO-7B-Qwen-Coder/blob/main/YOLO-7B-Qwen-q4.gguf
+# → https://huggingface.co/erdemozkan/YOLO-Coder-8B/blob/main/YOLO-Coder-8B-Q4_K_M.gguf
 
 # Create a Modelfile
 cat > Modelfile <<'EOF'
-FROM ./YOLO-7B-Qwen-q4.gguf
+FROM ./YOLO-Coder-8B-Q4_K_M.gguf
 
 TEMPLATE """{{ if .System }}<|im_start|>system
 {{ .System }}<|im_end|>
@@ -170,10 +192,10 @@ SYSTEM """You are a CLI repair tool. Output ONLY a single bare bash command to f
 EOF
 
 # Register with Ollama
-ollama create yolo-7b -f Modelfile
+ollama create yolo-coder-8b -f Modelfile
 
 # Verify it works
-ollama run yolo-7b "ModuleNotFoundError: No module named 'requests'"
+ollama run yolo-coder-8b "ModuleNotFoundError: No module named 'requests'"
 # → pip install requests
 ```
 
@@ -181,11 +203,11 @@ ollama run yolo-7b "ModuleNotFoundError: No module named 'requests'"
 
 ```bash
 mkdir -p ~/.yolo
-# Use 1.5B (default, fast):
-echo '{"model": "hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder"}' > ~/.yolo/config.json
+# Use 8B (default, best accuracy):
+echo '{"model": "hf.co/erdemozkan/YOLO-Coder-8B"}' > ~/.yolo/config.json
 
-# Or use 7B (if registered manually as above):
-echo '{"model": "yolo-7b"}' > ~/.yolo/config.json
+# Or use 1.5B (faster, low RAM):
+echo '{"model": "hf.co/erdemozkan/YOLO-Coder-1.5B"}' > ~/.yolo/config.json
 ```
 
 ### 5. Run it
@@ -223,8 +245,8 @@ yoco --rollback src/main.py
 # Browse history of past runs
 yoco --history
 
-# Use the bigger 7B model for hard errors
-yoco --model yolo-7b python3 myapp.py
+# Use the bigger 8B model for hard errors
+yoco --model hf.co/erdemozkan/YOLO-Coder-8B python3 myapp.py
 ```
 
 ---
@@ -246,33 +268,28 @@ yoco --model yolo-7b python3 myapp.py
 
 ## The model
 
-YOLO ships with fine-tuned `Qwen2.5-Coder` models trained specifically on CLI error/fix pairs. It's trained to output exactly one bare shell command — no markdown, no explanation, no backticks. Just the fix.
+Fine-tuned `Qwen2.5-Coder` models trained on **6,719** real CLI error/fix pairs. Output: exactly one bare shell command. No markdown, no explanation, no backticks.
 
-**Our fine-tuned models are live on Hugging Face!**
+| Model | Size | RAM | HuggingFace |
+|---|---|---|---|
+| **YOLO-Coder-8B** | ~4.4GB | ~6GB | [erdemozkan/YOLO-Coder-8B](https://huggingface.co/erdemozkan/YOLO-Coder-8B) |
+| YOLO-Coder-1.5B | ~941MB | ~2GB | [erdemozkan/YOLO-Coder-1.5B](https://huggingface.co/erdemozkan/YOLO-Coder-1.5B) |
 
-### 1. Using with Ollama
-You can pull and run the models directly via Ollama:
+### Using with Ollama
 ```bash
-# For fast fixes, common errors, and low RAM usage:
-ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder
+# 8B — best accuracy (default)
+ollama run hf.co/erdemozkan/YOLO-Coder-8B
 
-# For complex errors and better reasoning:
-ollama run hf.co/erdemozkan/YOLO-7B-Qwen-Coder
+# 1.5B — fast, runs on any machine
+ollama run hf.co/erdemozkan/YOLO-Coder-1.5B
 ```
 
-### 2. Using with LM Studio or llama.cpp
-1. Browse to my Hugging Face profile: [erdemozkan](https://huggingface.co/erdemozkan).
-2. Open the model repository (`YOLO-1.5B-Qwen-Coder` or `YOLO-7B-Qwen-Coder`).
-3. Download the `.gguf` file from the "Files" section.
-4. Load the file into LM Studio or run it with your `llama.cpp` server.
+### Using with LM Studio or llama.cpp
+1. Open the HF repo linked above.
+2. Download the `Q4_K_M.gguf` file from the Files tab.
+3. Load into LM Studio or run with your `llama.cpp` server.
 
-| Model | Size | Best for |
-|---|---|---|
-| `YOLO-1.5B-Qwen-Coder` | 1.5B | Fast fixes, common errors, low RAM |
-| `YOLO-7B-Qwen-Coder` | 7B | Complex errors, better reasoning |
-| `qwen2.5-coder:7b` | 7B | Vanilla base model |
-
-Training data: 2,250 error/fix pairs covering Python, Node, npm, TypeScript, Docker, Git, web frameworks, auth, async, CORS, circular imports, and more. Format: ChatML LoRA on Apple Silicon M-series.
+Training data: **6,719** error/fix pairs across 15 categories: Python, pip, Node.js, npm, TypeScript, Docker, Git, shell, Cargo/Rust, SSH, database, venv/conda, make/cmake, cloud (AWS/GCP), yarn. Fine-tuned with MLX LoRA on Apple Silicon.
 
 ---
 
@@ -307,7 +324,7 @@ YOCO supports **Ollama**, **LM Studio**, and **llama.cpp** out of the box. Confi
   "provider": "ollama",
   "host": "localhost",
   "port": 11434,
-  "model": "hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder",
+  "model": "hf.co/erdemozkan/YOLO-Coder-8B",
   "max_attempts": 3,
   "dry_run": false
 }
@@ -323,7 +340,7 @@ yoco --provider lmstudio python3 myapp.py
 yoco --host 192.168.1.50 --port 11434 python3 myapp.py
 
 # Override model for one run
-yoco --model yolo-7b python3 myapp.py
+yoco --model hf.co/erdemozkan/YOLO-Coder-8B python3 myapp.py
 ```
 
 ### Provider defaults
@@ -338,9 +355,9 @@ yoco --model yolo-7b python3 myapp.py
 
 **Ollama (recommended)**
 ```bash
-ollama serve                                        # start the server
-ollama run hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder  # pull + verify model
-echo '{"provider": "ollama", "model": "hf.co/erdemozkan/YOLO-1.5B-Qwen-Coder"}' > ~/.yolo/config.json
+ollama serve                                       # start the server
+ollama run hf.co/erdemozkan/YOLO-Coder-8B         # pull + verify model
+echo '{"provider": "ollama", "model": "hf.co/erdemozkan/YOLO-Coder-8B"}' > ~/.yolo/config.json
 ```
 
 **LM Studio**
@@ -354,7 +371,7 @@ echo '{"provider": "lmstudio"}' > ~/.yolo/config.json
 
 **llama.cpp server**
 ```bash
-./server -m YOLO-7B-Qwen-q4.gguf --port 8080      # start the server
+./server -m YOLO-Coder-8B-Q4_K_M.gguf --port 8080  # start the server
 echo '{"provider": "llamacpp", "port": 8080}' > ~/.yolo/config.json
 ```
 
@@ -404,13 +421,11 @@ Completed:
 - [x] Fix memory — instant replay of past fixes
 - [x] Security gate — blocks git push when secrets are detected
 - [x] First-run disclaimer with local acceptance record
+- [x] `pip install yolo-coder` — published to PyPI
 
 Near-term:
-- [ ] Rust / cargo error interceptors
-- [ ] Shell script error interceptors (bash -e failures)
 - [ ] VS Code extension (show fix inline before applying)
 - [ ] CI mode (non-interactive, exits 0 on fix, 1 on failure)
-- [x] `pip install yolo-coder` — published to PyPI
 - [ ] Lean terminal UI — interactive dashboard while YOCO works
 - [ ] YOCO Web — browser-based interface similar to Claude Code
 

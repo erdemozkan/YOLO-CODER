@@ -13,10 +13,16 @@ SYSTEM_PROMPT = (
 )
 
 
-def predict(error: str, model: str = "claude-sonnet-4-6") -> str:
+def predict(error: str, model: str = "claude-sonnet-4-6",
+            command: str = "", **_kwargs) -> str:
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         raise RuntimeError("ANTHROPIC_API_KEY not set")
+
+    user_content = (
+        f"[Linux] $ {command}\nError:\n{error}\nFIX:" if command
+        else f"Error:\n{error}\nFIX:"
+    )
 
     client = anthropic.Anthropic(api_key=api_key)
     try:
@@ -24,7 +30,7 @@ def predict(error: str, model: str = "claude-sonnet-4-6") -> str:
             model=model,
             max_tokens=128,
             system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": error}],
+            messages=[{"role": "user", "content": user_content}],
         )
         return resp.content[0].text.strip()
     except Exception as e:

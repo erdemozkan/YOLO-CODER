@@ -59,13 +59,15 @@ CATEGORY_ORDER = [
 ]
 
 MODEL_COLORS = [
-    "#7C6AF5",  # purple  — YOLO-7B
+    "#50DC78",  # green   — YOLO-7B v2
+    "#7C6AF5",  # purple  — YOLO-7B v1
     "#4A9EDB",  # blue    — base 7B
     "#F5A623",  # orange  — YOLO-1.5B
 ]
 
 MODEL_SHORT = {
-    "yolo-7b":          "YOLO-7B",
+    "yolov2":           "YOLO-7B v2",
+    "yolo-7b":          "YOLO-7B v1",
     "qwen2.5-coder:7b": "Qwen2.5-7B (base)",
     "yolo-coder":       "YOLO-1.5B",
 }
